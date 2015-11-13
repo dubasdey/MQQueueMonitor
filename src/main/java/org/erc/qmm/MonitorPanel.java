@@ -101,11 +101,11 @@ public class MonitorPanel extends JPanel {
 		alertLabel.setText(Messages.getString("MonitorPanel.alert_ok")); //$NON-NLS-1$
 		alertPanel.add(alertLabel);
 		
-		itemsInputLabel = new JLabel(new ImageIcon( getClass().getResource("/com/isb/qmm/img/small/mail_receive.png"))); //$NON-NLS-1$
+		itemsInputLabel = new JLabel(new ImageIcon( getClass().getResource("/org/erc/qmm/img/small/receive.png"))); //$NON-NLS-1$
 		itemsInputLabel.setText(MessageFormat.format(Messages.getString("MonitorPanel.totalinfoInput"), 0,0,0)); //$NON-NLS-1$
 		alertPanel.add(itemsInputLabel);
 		
-		itemsOutputLabel = new JLabel(new ImageIcon( getClass().getResource("/com/isb/qmm/img/small/mail_send.png"))); //$NON-NLS-1$
+		itemsOutputLabel = new JLabel(new ImageIcon( getClass().getResource("/org/erc/qmm/img/small/send.png"))); //$NON-NLS-1$
 		itemsOutputLabel.setText(MessageFormat.format(Messages.getString("MonitorPanel.totalinfoOutput"), 0,0,0)); //$NON-NLS-1$
 		alertPanel.add(itemsOutputLabel);
         add(alertPanel, BorderLayout.SOUTH);
