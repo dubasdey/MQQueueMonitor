@@ -39,12 +39,21 @@ public class MonitorPanel extends JPanel {
 	
 	private JLabel alertLabel;
 	
-	private JLabel itemsLabel;
+	private JLabel itemsInputLabel;
+	
+	private JLabel itemsOutputLabel;
 	
 	private JFreeChart chart;
 	
 	private QueueMonitor monitor;
 
+	private long startTime=0;
+	private long inputPerSecond = 0;
+	private long outputPerSecond = 0;
+	private long maxOutPerSecond =0;
+	private long maxInPerSecond = 0;
+	private long lastTime = 0;
+	
 	/**
 	 * Create the panel.
 	 */
@@ -92,29 +101,44 @@ public class MonitorPanel extends JPanel {
 		alertLabel.setText(Messages.getString("MonitorPanel.alert_ok")); //$NON-NLS-1$
 		alertPanel.add(alertLabel);
 		
-		itemsLabel = new JLabel(new ImageIcon( getClass().getResource(Images.MESSAGE))); //$NON-NLS-1$
-		itemsLabel.setText(MessageFormat.format(Messages.getString("MonitorPanel.totalinfo"), 0,0,0)); //$NON-NLS-1$
-		alertPanel.add(itemsLabel);
+		itemsInputLabel = new JLabel(new ImageIcon( getClass().getResource("/com/isb/qmm/img/small/mail_receive.png"))); //$NON-NLS-1$
+		itemsInputLabel.setText(MessageFormat.format(Messages.getString("MonitorPanel.totalinfoInput"), 0,0,0)); //$NON-NLS-1$
+		alertPanel.add(itemsInputLabel);
+		
+		itemsOutputLabel = new JLabel(new ImageIcon( getClass().getResource("/com/isb/qmm/img/small/mail_send.png"))); //$NON-NLS-1$
+		itemsOutputLabel.setText(MessageFormat.format(Messages.getString("MonitorPanel.totalinfoOutput"), 0,0,0)); //$NON-NLS-1$
+		alertPanel.add(itemsOutputLabel);
         add(alertPanel, BorderLayout.SOUTH);
         
 	}
 
-
-	
-	private long startTime;
-	private long inputPerSecond = 0;
-	private long outputPerSecond = 0;
-	
 	private void add(int depth, int processed, int enqueued){
 		Millisecond now = new Millisecond();
-		//totalMessages = depth;
+
 		totalEnqueued += enqueued;
 		totalDequeued += processed;
 		
-		inputPerSecond = (totalEnqueued * ((System.currentTimeMillis() - startTime)/1000)) / 100;
-		outputPerSecond = (totalDequeued * ((System.currentTimeMillis() - startTime)/1000)) / 100;
+		if(lastTime <1){
+			lastTime = startTime;
+		}
 		
-		itemsLabel.setText(MessageFormat.format(Messages.getString("MonitorPanel.totalinfo"),totalDequeued,inputPerSecond,outputPerSecond)); //$NON-NLS-1$
+		long time = (System.currentTimeMillis() - lastTime) / 1000;
+		
+		inputPerSecond  = (enqueued / time);
+		outputPerSecond = (processed / time);
+		
+		if(inputPerSecond>maxInPerSecond){
+			maxInPerSecond = inputPerSecond;
+		}
+		if(outputPerSecond>maxOutPerSecond){
+			maxOutPerSecond = outputPerSecond;
+		}
+		lastTime = System.currentTimeMillis();
+		
+		itemsInputLabel.setText(MessageFormat.format(Messages.getString("MonitorPanel.totalinfoInput"),totalEnqueued,inputPerSecond,maxInPerSecond)); //$NON-NLS-1$
+		itemsOutputLabel.setText(MessageFormat.format(Messages.getString("MonitorPanel.totalinfoOutput"),totalDequeued,outputPerSecond,maxOutPerSecond)); //$NON-NLS-1$
+		
+		
 		range.getSeries(0).add(now,depth);
 		range.getSeries(1).add(now,enqueued);
 		range.getSeries(2).add(now,processed);
