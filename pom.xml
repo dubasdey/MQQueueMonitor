@@ -82,6 +82,7 @@
 		          		</manifest>
 		          		<manifestEntries>
 		          			<SplashScreen-Image>META-INF/startup.gif</SplashScreen-Image>
+		          			<Class-Path>lib/com.ibm.mq.jar lib/com.ibm.mq.pcf.jar lib/connector.jar</Class-Path>
 		          		</manifestEntries>
 		        	</archive>
 		        	<descriptorRefs>
