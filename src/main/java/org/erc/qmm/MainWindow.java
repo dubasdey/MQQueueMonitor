@@ -44,7 +44,8 @@ public class MainWindow {
 	    			JFrame.setDefaultLookAndFeelDecorated(true);
 	    			JDialog.setDefaultLookAndFeelDecorated(true);
 	    			System.setProperty("sun.awt.noerasebackground", "true"); //$NON-NLS-1$ //$NON-NLS-2$
-	    			UIManager.setLookAndFeel("org.pushingpixels.substance.api.skin.SubstanceBusinessBlackSteelLookAndFeel"); //$NON-NLS-1$
+	    			
+	    			UIManager.setLookAndFeel("SystemLookAndFeel"); //$NON-NLS-1$
 	    		}catch(Exception e){}
 	    		
 				try {
