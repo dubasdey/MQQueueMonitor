@@ -45,7 +45,7 @@ public class MainWindow {
 	    			JDialog.setDefaultLookAndFeelDecorated(true);
 	    			System.setProperty("sun.awt.noerasebackground", "true"); //$NON-NLS-1$ //$NON-NLS-2$
 	    			
-	    			UIManager.setLookAndFeel("SystemLookAndFeel"); //$NON-NLS-1$
+	    			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName()); //$NON-NLS-1$
 	    		}catch(Exception e){}
 	    		
 				try {
