@@ -36,15 +36,27 @@ import org.erc.qmm.explorer.MessageReadedListener;
 import org.erc.qmm.i18n.Messages;
 
 
+/**
+ * The Class ExplorerWindow.
+ */
 public class ExplorerWindow extends JFrame {
 
+	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = -4239197809052439387L;
 
+	/** The queue. */
 	private Queue queue;
+	
+	/** The table. */
 	private JTable table;
 	
+	/** The lb status. */
 	private JLabel lbStatus;
+	
+	/** The pb status. */
 	private JProgressBar pbStatus;
+	
+	/** The model. */
 	private MessageDataModel model;
 	
 	/**
@@ -56,6 +68,11 @@ public class ExplorerWindow extends JFrame {
 	}
 
 	
+	/**
+	 * Instantiates a new explorer window.
+	 *
+	 * @param queue the queue
+	 */
 	public ExplorerWindow(Queue queue) {
 		this();
 		this.queue = queue;
@@ -132,6 +149,9 @@ public class ExplorerWindow extends JFrame {
 	}
 	
 	
+	/**
+	 * Adds the j table.
+	 */
 	private void addJTable(){
 		table = new JTable();
 		table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
@@ -163,6 +183,9 @@ public class ExplorerWindow extends JFrame {
 	}
 	
 	
+	/**
+	 * Load messages.
+	 */
 	private void loadMessages(){
 		
 		SwingWorker<List<JMQMessage>,Object> poller = new SwingWorker<List<JMQMessage>,Object>(){

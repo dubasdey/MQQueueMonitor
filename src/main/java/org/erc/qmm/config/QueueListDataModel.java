@@ -9,14 +9,24 @@ import javax.xml.parsers.ParserConfigurationException;
 
 import org.xml.sax.SAXException;
 
+/**
+ * The Class QueueListDataModel.
+ */
 public class QueueListDataModel extends AbstractListModel<Queue> {
 
-	/**
-	 * 
-	 */
+	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = -3504381659399672144L;
+	
+	/** The queues. */
 	private List<Queue> queues;
 	
+	/**
+	 * Reload.
+	 *
+	 * @throws SAXException the SAX exception
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 * @throws ParserConfigurationException the parser configuration exception
+	 */
 	public synchronized void reload() throws SAXException, IOException, ParserConfigurationException{
 		Config config = new Config();
 		queues = config.loadQueues();
@@ -25,6 +35,9 @@ public class QueueListDataModel extends AbstractListModel<Queue> {
 		}
 	}
 	
+	/**
+	 * Save.
+	 */
 	public synchronized void save(){
 		Config config = new Config();
 		try {
@@ -36,11 +49,17 @@ public class QueueListDataModel extends AbstractListModel<Queue> {
 		
 	}
 	
+	/* (non-Javadoc)
+	 * @see javax.swing.ListModel#getSize()
+	 */
 	@Override
 	public int getSize() {
 		return queues!=null?queues.size():0;
 	}
 
+	/* (non-Javadoc)
+	 * @see javax.swing.ListModel#getElementAt(int)
+	 */
 	@Override
 	public Queue getElementAt(int index) {
 		if(queues!=null && queues.size()> index){
@@ -49,12 +68,23 @@ public class QueueListDataModel extends AbstractListModel<Queue> {
 		return null;
 	}
 	
+	/**
+	 * Removes the.
+	 *
+	 * @param queue the queue
+	 */
 	public void remove(Queue queue){
 		if(queues!=null){
 			queues.remove(queue);
 			fireContentsChanged(this, 0, queues.size()-1);
 		}	
 	}
+	
+	/**
+	 * Adds the.
+	 *
+	 * @param queue the queue
+	 */
 	public void add(Queue queue){
 		if(queues==null){
 			queues = new ArrayList<Queue>();
@@ -64,6 +94,12 @@ public class QueueListDataModel extends AbstractListModel<Queue> {
 			fireContentsChanged(this, 0, queues.size()-1);
 		}
 	}	
+	
+	/**
+	 * Removes the.
+	 *
+	 * @param queuePos the queue pos
+	 */
 	public void remove(int queuePos){
 		if(queues!=null){
 			queues.remove(queuePos);

@@ -17,14 +17,25 @@ import com.ibm.mq.pcf.PCFException;
 import com.ibm.mq.pcf.PCFMessage;
 import com.ibm.mq.pcf.PCFParameter;
 
+/**
+ * The Class QueueMonitor.
+ */
 public class QueueMonitor extends Thread{
 
+	/** The listeners. */
 	private List<PollListener> listeners;
 	
+	/** The event. */
 	private PollEvent event;
 	
+	/** The queue. */
 	private Queue queue;
 	
+	/**
+	 * Instantiates a new queue monitor.
+	 *
+	 * @param queue the queue
+	 */
 	public QueueMonitor(Queue queue){
 		super();
 		setName("QueueMonitor-" + queue.getName());
@@ -34,6 +45,9 @@ public class QueueMonitor extends Thread{
 		this.event =new PollEvent();
 	}
 	
+	/**
+	 * Emit event.
+	 */
 	private void emitEvent(){
 		if(listeners!=null && !listeners.isEmpty()){
 			for(PollListener listener:listeners){
@@ -42,6 +56,13 @@ public class QueueMonitor extends Thread{
 		}
 	}
 	
+	/**
+	 * Fetch.
+	 *
+	 * @param responses the responses
+	 * @throws MQException the MQ exception
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 */
 	private void fetch(MQMessage[] responses) throws MQException, IOException{
 		MQCFH cfh;
 		for (int i = 0; i < responses.length; i++) {
@@ -70,6 +91,9 @@ public class QueueMonitor extends Thread{
 	}
 	
 	
+	/**
+	 * Check queue data.
+	 */
 	private void checkQueueData(){
 		try {
 			PCFAgent agentNode = new PCFAgent(queue.getHost(), queue.getPort(), queue.getChannel());
@@ -98,6 +122,9 @@ public class QueueMonitor extends Thread{
 		}
 	}
 	
+	/* (non-Javadoc)
+	 * @see java.lang.Thread#run()
+	 */
 	@Override
 	public void run() {
 		super.run();
@@ -112,10 +139,20 @@ public class QueueMonitor extends Thread{
 		}
 	}
 	
+	/**
+	 * Adds the poll listener.
+	 *
+	 * @param listener the listener
+	 */
 	public void addPollListener(PollListener listener){
 		listeners.add(listener);
 	}
 
+	/**
+	 * Gets the queue.
+	 *
+	 * @return the queue
+	 */
 	public Queue getQueue() {
 		return queue;
 	}

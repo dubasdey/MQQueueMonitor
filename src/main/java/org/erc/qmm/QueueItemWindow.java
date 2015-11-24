@@ -19,12 +19,18 @@ import java.awt.Toolkit;
 import java.io.IOException;
 import java.text.MessageFormat;
 
+/**
+ * The Class QueueItemWindow.
+ */
 public class QueueItemWindow extends JFrame {
 
+	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = 151118672093734401L;
 
+	/** The content panel. */
 	private final JPanel contentPanel = new JPanel();
 
+	/** The text pane. */
 	private JTextPane textPane;
 
 	/**
@@ -61,6 +67,11 @@ public class QueueItemWindow extends JFrame {
 		buttonPane.add(cancelButton);
 	}
 	
+	/**
+	 * Instantiates a new queue item window.
+	 *
+	 * @param message the message
+	 */
 	public QueueItemWindow(JMQMessage message) {
 		this();
 		try {

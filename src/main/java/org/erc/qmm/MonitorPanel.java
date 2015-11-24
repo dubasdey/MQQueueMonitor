@@ -27,31 +27,54 @@ import org.jfree.data.time.Millisecond;
 import org.jfree.data.time.TimeSeries;
 import org.jfree.data.time.TimeSeriesCollection;
 
+/**
+ * The Class MonitorPanel.
+ */
 public class MonitorPanel extends JPanel {
 
+	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = 1181783867179893568L;
 
+	/** The total enqueued. */
 	private long totalEnqueued = 0;
 	
+	/** The total dequeued. */
 	private long totalDequeued = 0;
 	
+	/** The range. */
 	private TimeSeriesCollection range;
 	
+	/** The alert label. */
 	private JLabel alertLabel;
 	
+	/** The items input label. */
 	private JLabel itemsInputLabel;
 	
+	/** The items output label. */
 	private JLabel itemsOutputLabel;
 	
+	/** The chart. */
 	private JFreeChart chart;
 	
+	/** The monitor. */
 	private QueueMonitor monitor;
 
+	/** The start time. */
 	private long startTime=0;
+	
+	/** The input per second. */
 	private long inputPerSecond = 0;
+	
+	/** The output per second. */
 	private long outputPerSecond = 0;
+	
+	/** The max out per second. */
 	private long maxOutPerSecond =0;
+	
+	/** The max in per second. */
 	private long maxInPerSecond = 0;
+	
+	/** The last time. */
 	private long lastTime = 0;
 	
 	/**
@@ -112,6 +135,13 @@ public class MonitorPanel extends JPanel {
         
 	}
 
+	/**
+	 * Adds the.
+	 *
+	 * @param depth the depth
+	 * @param processed the processed
+	 * @param enqueued the enqueued
+	 */
 	private void add(int depth, int processed, int enqueued){
 		Millisecond now = new Millisecond();
 
@@ -145,6 +175,11 @@ public class MonitorPanel extends JPanel {
 		
 	}
 	
+	/**
+	 * Sets the alarm.
+	 *
+	 * @param on the new alarm
+	 */
 	private void setAlarm(boolean on){
 		if (on){
 			alertLabel.setIcon(new ImageIcon(getClass().getResource(Images.ALERT))); //$NON-NLS-1$
@@ -156,6 +191,11 @@ public class MonitorPanel extends JPanel {
 	
 	}
 
+	/**
+	 * Load with.
+	 *
+	 * @param queue the queue
+	 */
 	public void loadWith(Queue queue){		
 		startTime = System.currentTimeMillis();
 		monitor = new QueueMonitor(queue);
@@ -175,6 +215,11 @@ public class MonitorPanel extends JPanel {
 		monitor.start();
 	}
 	
+	/**
+	 * Gets the queue.
+	 *
+	 * @return the queue
+	 */
 	public Queue getQueue(){
 		return monitor.getQueue();
 	}

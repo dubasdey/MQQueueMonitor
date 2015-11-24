@@ -9,8 +9,18 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
+/**
+ * The Class FileUtils.
+ */
 public abstract class FileUtils {
 	
+	/**
+	 * Copy.
+	 *
+	 * @param source the source
+	 * @param dest the dest
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 */
 	public static void copy(File source, File dest) throws IOException {
 	    InputStream is = null;
 	    OutputStream os = null;
@@ -28,6 +38,13 @@ public abstract class FileUtils {
 	    }
 	}
 	
+	/**
+	 * Store.
+	 *
+	 * @param file the file
+	 * @param content the content
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 */
 	public static void store(File file,String content) throws IOException{
 		BufferedWriter bw = new BufferedWriter(new FileWriter(file.getAbsoluteFile()));
 		bw.write(content);

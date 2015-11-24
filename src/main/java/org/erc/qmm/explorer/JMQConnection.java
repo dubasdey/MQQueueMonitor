@@ -3,16 +3,30 @@ package org.erc.qmm.explorer;
 import java.util.Hashtable;
 import java.util.Properties;
 
+/**
+ * The Class JMQConnection.
+ */
 public class JMQConnection {
 
+    /** The mq props. */
     private Hashtable<String,Object> mqProps;
 
+    /**
+     * Instantiates a new JMQ connection.
+     *
+     * @param properties the properties
+     */
     public JMQConnection(Properties properties) {
         if(properties != null) {
             buildMQProps(properties);
         }
     }
 
+    /**
+     * Builds the mq props.
+     *
+     * @param properties the properties
+     */
     private void buildMQProps(Properties properties) {
         if(properties == null) {
             mqProps = null;
@@ -36,6 +50,11 @@ public class JMQConnection {
         }
     }
 
+    /**
+     * Gets the properties.
+     *
+     * @return the properties
+     */
     public Hashtable<String,Object> getProperties() {
         return mqProps;
     }

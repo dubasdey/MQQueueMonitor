@@ -11,20 +11,35 @@ import org.erc.qmm.config.Queue;
 
 import com.ibm.mq.MQException;
 
-
+/**
+ * The Class Explorer.
+ */
 public class Explorer {
 
+	/** The queue. */
 	private Queue queue;
 
+	/** The depth. */
 	private int depth;
 	
+	/** The listeners. */
 	private List<MessageReadedListener> listeners;
 	
+	/**
+	 * Instantiates a new explorer.
+	 *
+	 * @param queue the queue
+	 */
 	public Explorer (Queue queue){
 		this.queue = queue;
 		listeners =new ArrayList<MessageReadedListener>();
 	}
 	
+	/**
+	 * Read all.
+	 *
+	 * @return the list
+	 */
 	public List<JMQMessage> readAll(){
 		List<JMQMessage> messages = new ArrayList<JMQMessage>();
 		
@@ -66,16 +81,31 @@ public class Explorer {
 		return messages;
 	}
 	
+	/**
+	 * Gets the depth.
+	 *
+	 * @return the depth
+	 */
 	public int getDepth(){
 		return depth;
 	}
 	
+    /**
+     * Fire message readed.
+     *
+     * @param message the message
+     */
     protected void fireMessageReaded(JMQMessage message){
     	for(MessageReadedListener listener: listeners){
     		listener.messageReaded(message);
     	}
     }
     
+    /**
+     * Adds the message readed listener.
+     *
+     * @param listener the listener
+     */
     public void addMessageReadedListener(MessageReadedListener listener){
     	this.listeners.add(listener);
     }	

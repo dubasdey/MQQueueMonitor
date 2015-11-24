@@ -39,54 +39,103 @@ import javax.swing.event.ListSelectionEvent;
 import java.awt.Component;
 
 /**
- * Configuration window
- * 
- * @author xIS15817
+ * Configuration window.
  *
+ * @author xIS15817
  */
 public class ConfigWindow extends JDialog {
 
+	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = 3910825248241443146L;
 	
+	/** The content panel. */
 	private final JPanel contentPanel = new JPanel();
+	
+	/** The txt name. */
 	private JTextField txtName;
+	
+	/** The txt host. */
 	private JTextField txtHost;
+	
+	/** The txt channel. */
 	private JTextField txtChannel;
+	
+	/** The txt queue. */
 	private JTextField txtQueue;
+	
+	/** The txt port. */
 	private JTextField txtPort;
+	
+	/** The sld poll time. */
 	private JSlider sldPollTime ;
 	
+	/** The queue list. */
 	private JList<Queue> queueList;
+	
+	/** The queues. */
 	private QueueListDataModel queues;
 
+	/** The selected. */
 	private Queue selected;
 	
+	/** The changes. */
 	private boolean changes;
 	
+	/** The listeners. */
 	private List<ActionListener> listeners;
 	
+	/**
+	 * The listener interface for receiving simpleDocument events.
+	 * The class that is interested in processing a simpleDocument
+	 * event implements this interface, and the object created
+	 * with that class is registered with a component using the
+	 * component's <code>addSimpleDocumentListener<code> method. When
+	 * the simpleDocument event occurs, that object's appropriate
+	 * method is invoked.
+	 *
+	 * @see SimpleDocumentEvent
+	 */
 	private abstract class SimpleDocumentListener implements DocumentListener{
 
+		/* (non-Javadoc)
+		 * @see javax.swing.event.DocumentListener#insertUpdate(javax.swing.event.DocumentEvent)
+		 */
 		@Override
 		public void insertUpdate(DocumentEvent e) {
 			update(e);
 		}
 
+		/* (non-Javadoc)
+		 * @see javax.swing.event.DocumentListener#removeUpdate(javax.swing.event.DocumentEvent)
+		 */
 		@Override
 		public void removeUpdate(DocumentEvent e) {
 			update(e);
 		}
 
+		/* (non-Javadoc)
+		 * @see javax.swing.event.DocumentListener#changedUpdate(javax.swing.event.DocumentEvent)
+		 */
 		@Override
 		public void changedUpdate(DocumentEvent e) {
 			update(e);
 		}
 		
+		/**
+		 * Update.
+		 *
+		 * @param e the e
+		 */
 		public abstract void update(DocumentEvent e);
 
 	}
 	
 	
+	/**
+	 * Adds the changed listener.
+	 *
+	 * @param listener the listener
+	 */
 	public void addChangedListener(ActionListener listener) {
 		if(listeners == null){
 			listeners =new ArrayList<ActionListener>();
@@ -95,42 +144,57 @@ public class ConfigWindow extends JDialog {
 	}
 	
 	
+	/**
+	 * Fire changes saved.
+	 */
 	protected void fireChangesSaved(){
-		if(listeners!=null && changes){
-			for(ActionListener listener : listeners){
-				listener.actionPerformed(new ActionEvent(this, 1, "SAVE_OK"));
+		synchronized(listeners){
+			if(listeners!=null && changes){
+				for(ActionListener listener : listeners){
+					listener.actionPerformed(new ActionEvent(this, 1, "SAVE_OK"));
+				}
+				changes = false;
 			}
 		}
 	}
-	private void loadSelected(){
+	
+	/**
+	 * Load form with selected values.
+	 */
+	private void loadFormWithSelected(){
 		if(selected!=null && txtName!=null){
 			txtName.setText(selected.getDesc());
 			txtHost.setText(selected.getHost());
 			txtChannel.setText(selected.getChannel());
 			txtQueue.setText(selected.getName());
 			txtPort.setText(String.valueOf(selected.getPort()));
-			sldPollTime.setValue(selected.getPollTime());
+			sldPollTime.setValue(selected.getPollTime() / 1000);
 		}
 	}
 	
-	private void cleanSelected(){
+	/**
+	 * Clean form.
+	 */
+	private void cleanForm(){
 		txtName.setText(""); //$NON-NLS-1$
 		txtHost.setText(""); //$NON-NLS-1$
 		txtChannel.setText(""); //$NON-NLS-1$
 		txtQueue.setText(""); //$NON-NLS-1$
 		txtPort.setText("1417"); //$NON-NLS-1$
-		sldPollTime.setValue(5000);
+		sldPollTime.setValue(5);
 	}
 	
 	/**
 	 * Create the dialog.
-	 * @throws ParserConfigurationException 
-	 * @throws IOException 
-	 * @throws SAXException 
+	 *
+	 * @throws SAXException the SAX exception
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 * @throws ParserConfigurationException the parser configuration exception
 	 */
 	public ConfigWindow() throws SAXException, IOException, ParserConfigurationException {
 		changes = false;
 		
+		// Build window
 		setTitle(Messages.getString("ConfigWindow.title")); //$NON-NLS-1$
 		setBounds(100, 100, 418, 363);
 		getContentPane().setLayout(new BorderLayout());
@@ -139,50 +203,43 @@ public class ConfigWindow extends JDialog {
 		contentPanel.setLayout(null);
 		
 		queueList = new JList<Queue>();
-	
 		queueList.addListSelectionListener(new ListSelectionListener() {
 			public void valueChanged(ListSelectionEvent e) {
-				selected =(Queue) queueList.getSelectedValue();
-				loadSelected();
+				selected = queueList.getSelectedValue();
+				loadFormWithSelected();
 			}
 		});
 		queueList.setBorder(new BevelBorder(BevelBorder.LOWERED, null, null, null, null));
 		queueList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		queueList.setVisibleRowCount(10);
 		queueList.setValueIsAdjusting(true);
-		
-		queues = new QueueListDataModel();
-		queues.reload();
-		queueList.setModel(queues);
-		queueList.setSelectedIndex(0);
 		queueList.setBounds(10, 11, 134, 246);
 		contentPanel.add(queueList);
 		
-		
+		// ADD + UPDATE ACTION
 		JButton btnAdd = new JButton(""); //$NON-NLS-1$
 		btnAdd.setIcon(new ImageIcon(ConfigWindow.class.getResource(Images.PLUS))); //$NON-NLS-1$
 		btnAdd.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				cleanSelected();
-				selected = new Queue();
-				selected.setDesc(Messages.getString("ConfigWindow.defaultname")); //$NON-NLS-1$
-				selected.setPort(1417);
-				selected.setPollTime(5000);
+				cleanForm();
+				selected = new Queue(Messages.getString("ConfigWindow.defaultname"));  //$NON-NLS-1$
 				queues.add(selected);
 				queueList.setSelectedValue(selected, true);
-				loadSelected();
+				loadFormWithSelected();
 				changes = true;
 			}
 		});
 		btnAdd.setBounds(10, 268, 53, 23);
 		contentPanel.add(btnAdd);
 		
+		
+		// REMOVE ACTION
 		JButton btnRemove = new JButton(""); //$NON-NLS-1$
 		btnRemove.setIcon(new ImageIcon(ConfigWindow.class.getResource(Images.MINUS))); //$NON-NLS-1$
 		btnRemove.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				cleanSelected();
-				selected =(Queue) queueList.getSelectedValue();
+				cleanForm();
+				selected = queueList.getSelectedValue();
 				if (selected!=null){
 					queues.remove(selected);
 					changes = true;
@@ -192,6 +249,7 @@ public class ConfigWindow extends JDialog {
 		btnRemove.setBounds(91, 268, 53, 23);
 		contentPanel.add(btnRemove);
 		
+		// Labels and fields
 		JLabel lblHost = new JLabel(Messages.getString("ConfigWindow.host")); //$NON-NLS-1$
 		lblHost.setBounds(154, 72, 46, 14);
 		contentPanel.add(lblHost);
@@ -241,6 +299,16 @@ public class ConfigWindow extends JDialog {
 		txtPort = new JTextField();
 		txtPort.setBounds(201, 112, 58, 20);
 		contentPanel.add(txtPort);
+		txtPort.getDocument().addDocumentListener(new SimpleDocumentListener(){
+			public void update(DocumentEvent e) {
+				String strPort = txtPort.getText();
+				if (strPort!=null && strPort.length()>0){
+					int port = Integer.parseInt(strPort);
+					selected.setPort(port);
+					changes = true;
+				}
+			}	
+		});
 		
 		txtChannel = new JTextField();
 		txtChannel.setBounds(201, 156, 191, 20);
@@ -277,6 +345,7 @@ public class ConfigWindow extends JDialog {
 		sldPollTime.addChangeListener(new ChangeListener() {
 			public void stateChanged(ChangeEvent e) {
 				selected.setPollTime(sldPollTime.getValue());
+				changes = true;
 			}
 		});
 		contentPanel.add(sldPollTime);
@@ -310,5 +379,30 @@ public class ConfigWindow extends JDialog {
 			
 		setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 		setFocusTraversalPolicy(new FocusTraversalOnArray(new Component[]{getContentPane(), queueList, lblName, txtName, contentPanel, txtHost, lblPort, txtPort, lblChannel, txtChannel, lblQueue, txtQueue, lblPollTime, sldPollTime, lblHost, btnAdd, btnRemove, buttonPane, okButton, cancelButton}));
+		
+		
+		// Load new config
+		loadConfig();
+		
+	}
+	
+	
+	/**
+	 * Load config.
+	 *
+	 * @throws SAXException the SAX exception
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 * @throws ParserConfigurationException the parser configuration exception
+	 */
+	private void loadConfig() throws SAXException, IOException, ParserConfigurationException{
+		queues = new QueueListDataModel();
+		queues.reload();
+		queueList.setModel(queues);
+		// Select first item if has items
+		if (queues.getSize()>0){
+			selected =  queues.getElementAt(0);
+			queueList.setSelectedValue(selected, true);
+			loadFormWithSelected();
+		}	
 	}
 }

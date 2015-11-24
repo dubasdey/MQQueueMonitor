@@ -16,10 +16,23 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
+/**
+ * The Class Config.
+ */
 public class Config {
 
+	/**
+	 * Instantiates a new config.
+	 */
 	public Config(){}
 	
+	/**
+	 * Gets the text.
+	 *
+	 * @param parent the parent
+	 * @param tagName the tag name
+	 * @return the text
+	 */
 	private String getText(Element parent, String tagName){
 		NodeList list = parent.getElementsByTagName(tagName);
 		String content = null;
@@ -33,6 +46,13 @@ public class Config {
 		return content;
 	}
 	
+	/**
+	 * Gets the int.
+	 *
+	 * @param parent the parent
+	 * @param tagName the tag name
+	 * @return the int
+	 */
 	private int getInt(Element parent, String tagName){
 		String str = getText(parent,tagName);
 		int val=0;
@@ -42,6 +62,14 @@ public class Config {
 		return val;
 	}
 	
+	/**
+	 * Load queues.
+	 *
+	 * @return the list
+	 * @throws SAXException the SAX exception
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 * @throws ParserConfigurationException the parser configuration exception
+	 */
 	public List<Queue> loadQueues() throws SAXException, IOException, ParserConfigurationException{
 		List<Queue> items= new ArrayList<Queue>();
 		File xmlFile = new File("config/config.xml");
@@ -73,6 +101,12 @@ public class Config {
 		return items;
 	}
 	
+	/**
+	 * Save queues.
+	 *
+	 * @param queues the queues
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 */
 	public void saveQueues(List<Queue> queues) throws IOException{
 		File xmlFile = new File("config/config.xml");
 		File configFilder = new File("config");

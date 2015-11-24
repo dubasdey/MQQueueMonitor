@@ -25,14 +25,21 @@ import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.awt.Insets;
 
+/**
+ * The Class MainWindow.
+ */
 public class MainWindow {
 
+	/** The frm queue monitor. */
 	private JFrame frmQueueMonitor;
 
+	/** The tab panel. */
 	private JTabbedPane tabPanel;
 
 	/**
 	 * Launch the application.
+	 *
+	 * @param args the arguments
 	 */
 	public static void main(String[] args) {
 		
@@ -146,6 +153,9 @@ public class MainWindow {
 	
 	
 	
+	/**
+	 * Load queues.
+	 */
 	private void loadQueues(){
 		ImageIcon icon = new ImageIcon(MainWindow.class.getResource(Images.MESSAGE)); //$NON-NLS-1$
 		try {
