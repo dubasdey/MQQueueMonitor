@@ -6,8 +6,7 @@ jdk:
   
 deploy:
   provider: releases
-  api_key: 
-  	- secure: $GITAPI
+  api_key: $GITAPI
   file: "target/QueueMonitor.jar"
   skip_cleanup: true
   on:
