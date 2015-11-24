@@ -3,3 +3,12 @@ jdk:
   - oraclejdk8
   - oraclejdk7
   - openjdk7
+  
+deploy:
+  provider: releases
+  api_key: 
+  	- secure: $GITAPI
+  file: "target/QueueMonitor.jar"
+  skip_cleanup: true
+  on:
+    tags: true

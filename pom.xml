@@ -75,6 +75,7 @@
 				<version>2.2</version>
 				<configuration>
 					<finalName>${finalName}</finalName>
+					<appendAssemblyId>false</appendAssemblyId>
 					<archive>
 		        		<index>true</index>
 		          		<manifest>
@@ -88,6 +89,13 @@
 		        	<descriptorRefs>
 		          		<descriptorRef>jar-with-dependencies</descriptorRef>
 		        	</descriptorRefs>
+		        	<dependencySet>
+						<scope>system</scope>
+					 	<includes>
+					    	<include>*:jar</include>
+					  	</includes>
+					  	<outputDirectory>lib</outputDirectory>
+					</dependencySet>
 		      	</configuration>
 				<executions>
 				    <execution>
