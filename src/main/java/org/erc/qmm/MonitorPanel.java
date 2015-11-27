@@ -1,10 +1,8 @@
 package org.erc.qmm;
 
 import java.awt.BorderLayout;
-import java.awt.Color;
 import java.awt.FlowLayout;
 import java.text.MessageFormat;
-import java.util.Date;
 
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
@@ -15,17 +13,6 @@ import org.erc.qmm.i18n.Messages;
 import org.erc.qmm.monitor.PollEvent;
 import org.erc.qmm.monitor.PollListener;
 import org.erc.qmm.monitor.QueueMonitor;
-import org.jfree.chart.ChartPanel;
-import org.jfree.chart.JFreeChart;
-import org.jfree.chart.axis.DateAxis;
-import org.jfree.chart.axis.NumberAxis;
-import org.jfree.chart.axis.ValueAxis;
-import org.jfree.chart.plot.XYPlot;
-import org.jfree.chart.renderer.xy.StandardXYItemRenderer;
-import org.jfree.data.RangeType;
-import org.jfree.data.time.Millisecond;
-import org.jfree.data.time.TimeSeries;
-import org.jfree.data.time.TimeSeriesCollection;
 
 /**
  * The Class MonitorPanel.
@@ -40,10 +27,7 @@ public class MonitorPanel extends JPanel {
 	
 	/** The total dequeued. */
 	private long totalDequeued = 0;
-	
-	/** The range. */
-	private TimeSeriesCollection range;
-	
+
 	/** The alert label. */
 	private JLabel alertLabel;
 	
@@ -54,7 +38,7 @@ public class MonitorPanel extends JPanel {
 	private JLabel itemsOutputLabel;
 	
 	/** The chart. */
-	private JFreeChart chart;
+	private GraphPanel chart;
 	
 	/** The monitor. */
 	private QueueMonitor monitor;
@@ -81,43 +65,9 @@ public class MonitorPanel extends JPanel {
 	 * Create the panel.
 	 */
 	public MonitorPanel() {
-
-		range = new TimeSeriesCollection(new TimeSeries(Messages.getString("MonitorPanel.depth"))); //$NON-NLS-1$
-		range.addSeries(new TimeSeries(Messages.getString("MonitorPanel.enqueued"))); //$NON-NLS-1$
-		range.addSeries(new TimeSeries(Messages.getString("MonitorPanel.processed"))); //$NON-NLS-1$
-		
-		DateAxis xAxis = new DateAxis(Messages.getString("MonitorPanel.time")); //$NON-NLS-1$
-		xAxis.setAutoRange(true);
-		xAxis.setAutoRangeMinimumSize(100);
-		xAxis.setMinimumDate(new Date());
-		//xAxis.setDefaultAutoRange(new DateRange(0,10000000));
-		NumberAxis yAxis = new NumberAxis(Messages.getString("MonitorPanel.messages")); //$NON-NLS-1$
-		yAxis.setAutoRange(true);
-		yAxis.setMinorTickCount(1);
-		yAxis.setRangeType(RangeType.POSITIVE); 
-		yAxis.setAutoRangeIncludesZero(true);
-		yAxis.setStandardTickUnits(NumberAxis.createIntegerTickUnits());
-		
-		XYPlot plot = new XYPlot(range, xAxis,yAxis,new StandardXYItemRenderer());
-		plot.setBackgroundPaint(Color.black);
-		plot.setDomainGridlinePaint(Color.green);
-		plot.setRangeGridlinePaint(Color.green);	
-		plot.setNoDataMessage(Messages.getString("MonitorPanel.collecting_data")); //$NON-NLS-1$
-
-		chart = new JFreeChart(plot);
-		chart.setBorderVisible(false);
-
-		plot.setBackgroundPaint(Color.black);
-		plot.setDomainGridlinePaint(Color.lightGray);
-		plot.setRangeGridlinePaint(Color.lightGray);
-		final ValueAxis axis = plot.getDomainAxis();
-		axis.setAutoRange(true);
-		axis.setFixedAutoRange(60000.0); // 60 seconds
-
+		chart = new GraphPanel();
 		setLayout(new BorderLayout());
-		
-		ChartPanel chartPanel = new ChartPanel(chart);
-		add(chartPanel);
+		add(chart);
 		
 		JPanel alertPanel = new JPanel(new FlowLayout());
 		alertLabel = new JLabel(new ImageIcon(getClass().getResource(Images.OK))); //$NON-NLS-1$
@@ -143,8 +93,6 @@ public class MonitorPanel extends JPanel {
 	 * @param enqueued the enqueued
 	 */
 	private void add(int depth, int processed, int enqueued){
-		Millisecond now = new Millisecond();
-
 		totalEnqueued += enqueued;
 		totalDequeued += processed;
 		
@@ -168,11 +116,8 @@ public class MonitorPanel extends JPanel {
 		itemsInputLabel.setText(MessageFormat.format(Messages.getString("MonitorPanel.totalinfoInput"),totalEnqueued,inputPerSecond,maxInPerSecond)); //$NON-NLS-1$
 		itemsOutputLabel.setText(MessageFormat.format(Messages.getString("MonitorPanel.totalinfoOutput"),totalDequeued,outputPerSecond,maxOutPerSecond)); //$NON-NLS-1$
 		
-		
-		range.getSeries(0).add(now,depth);
-		range.getSeries(1).add(now,enqueued);
-		range.getSeries(2).add(now,processed);
-		
+		chart.addScore("ENQUEUED",enqueued,processed,depth);
+
 	}
 	
 	/**
@@ -200,7 +145,6 @@ public class MonitorPanel extends JPanel {
 		startTime = System.currentTimeMillis();
 		monitor = new QueueMonitor(queue);
 		monitor.addPollListener(new PollListener() {
-			
 			@Override
 			public void action(PollEvent e) {
 				
