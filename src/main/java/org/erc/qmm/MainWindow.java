@@ -15,6 +15,7 @@ import javax.swing.ImageIcon;
 import org.erc.qmm.config.Config;
 import org.erc.qmm.config.QueueConfig;
 import org.erc.qmm.i18n.Messages;
+import org.erc.qmm.util.Log;
 
 import java.awt.event.KeyEvent;
 import java.awt.event.InputEvent;
@@ -30,6 +31,8 @@ import java.awt.Insets;
  */
 public class MainWindow {
 
+	private static Log log = Log.getLog(MainWindow.class);
+			
 	/** The frm queue monitor. */
 	private JFrame frmQueueMonitor;
 
@@ -42,7 +45,6 @@ public class MainWindow {
 	 * @param args the arguments
 	 */
 	public static void main(String[] args) {
-		
         java.awt.EventQueue.invokeLater ( new Runnable() {
 	        public void run() {
 	        	
@@ -58,7 +60,7 @@ public class MainWindow {
 					MainWindow window = new MainWindow();
 					window.frmQueueMonitor.setVisible(true);
 				} catch (Exception e) {
-					e.printStackTrace();
+					log.error(e);
 				}
 	        }
 
@@ -104,7 +106,7 @@ public class MainWindow {
 					config.setModal(true);
 					config.setVisible(true);
 				} catch (Exception ex) {
-					ex.printStackTrace();
+					log.error(ex);
 				}
 			}
 		});
@@ -136,7 +138,7 @@ public class MainWindow {
 						explorerWindow.setVisible(true);
 					}
 				}catch(Exception ex){
-					ex.printStackTrace();
+					log.error(ex);
 				}
 			}
 		});
@@ -160,7 +162,7 @@ public class MainWindow {
 				tabPanel.addTab(queue.getDesc(), icon, panel, null);
 			}
 		} catch (Exception ex) {
-			ex.printStackTrace();
+			log.error(ex);
 		} 
 	}
 

@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.erc.qmm.config.QueueConfig;
+import org.erc.qmm.util.Log;
 
 import com.ibm.mq.MQEnvironment;
 import com.ibm.mq.MQException;
@@ -27,6 +28,8 @@ import com.ibm.mq.pcf.PCFParameter;
  */
 public class JMQQueue extends MQQueue {
 
+	private static Log log = Log.getLog(JMQQueue.class);
+	
 	public static final int MQIA_CURRENT_Q_DEPTH = CMQC.MQIA_CURRENT_Q_DEPTH;
 
 	public static final int MQIA_MAX_Q_DEPTH = CMQC.MQIA_MAX_Q_DEPTH;
@@ -134,7 +137,7 @@ public class JMQQueue extends MQQueue {
 				}
 			}
 		} catch(Exception exception) {
-			exception.printStackTrace();
+			log.error(exception);
 		}
 	}
 
@@ -230,6 +233,7 @@ public class JMQQueue extends MQQueue {
 		try {
 			s = queueConfig.getName() + " (currDepth: " + getCurrentDepth() + ")";
 		} catch(MQException mqexception) {
+			log.error(mqexception);
 			s = "ERROR: " + queueConfig.getName();
 		}
 		return s;
@@ -254,11 +258,9 @@ public class JMQQueue extends MQQueue {
 			// Requerido para obtener entrada y salida de mensajes
 			exec(agentNode.send(CMQCFC.MQCMD_RESET_Q_STATS, params),stats);
 
-		} catch (MQException mqe) {
-			System.out.println("ERROR: MQException caught" + mqe);
-		} catch (IOException ioe) {
-			System.out.println("ERROR: IOException caught" + ioe);
-		}
+		} catch (Exception ex) {
+			log.error(ex);
+		} 
 		return stats;
 	}
 	
@@ -270,8 +272,6 @@ public class JMQQueue extends MQQueue {
 			if (cfh.reason == 0){
 				if(fetch!=null){
 					for (int j = 0; j < cfh.parameterCount; j++) { 
-
-						
 						PCFParameter p = PCFParameter.nextParameter(responses [i]);
 						fetch.put(p.getParameter(), p.getValue());
 					}

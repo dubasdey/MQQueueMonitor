@@ -26,7 +26,6 @@ public class QueueConfig {
 	/** The name. */
 	private String name;
 
-	
 	/**
 	 * Instantiates a new queue.
 	 */

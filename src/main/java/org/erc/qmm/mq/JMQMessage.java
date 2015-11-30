@@ -4,11 +4,15 @@ import com.ibm.mq.MQMessage;
 import java.io.IOException;
 import java.util.Date;
 
+import org.erc.qmm.util.Log;
+
 /**
  * The Class JMQMessage.
  */
 public class JMQMessage extends MQMessage  {
 
+	private static Log log = Log.getLog(JMQMessage.class);
+	
     /** The position. */
     private int position;
     
@@ -151,6 +155,7 @@ public class JMQMessage extends MQMessage  {
 	        	stringbuffer.append("ReplyToQueueManager........").append(getReplyToQueueManager()).append("\r\n");
 	        	stringbuffer.append("Data length................").append(data.length).append("\r\n");
 	        } catch(Exception ex) {
+	        	log.error(ex);
 	        	stringbuffer.append("ERROR!!! ");
 	            stringbuffer.append(ex.getMessage()).append("\r\n");
 	        }

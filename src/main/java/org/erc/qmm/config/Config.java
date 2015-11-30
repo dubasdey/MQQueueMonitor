@@ -77,11 +77,8 @@ public class Config {
 			DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
 			DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
 			Document doc = dBuilder.parse(xmlFile);
-
 			doc.getDocumentElement().normalize();
-			
 			NodeList queuesList = doc.getElementsByTagName("queue");
-
 			for (int i = 0; i < queuesList.getLength(); i++) {
 				Node node = queuesList.item(i);
 				if (node.getNodeType() == Node.ELEMENT_NODE) {

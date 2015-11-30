@@ -9,6 +9,7 @@ import javax.swing.SwingUtilities;
 import org.erc.qmm.mq.JMQMessage;
 import org.erc.qmm.mq.JMQQueue;
 import org.erc.qmm.mq.MessageReadedListener;
+import org.erc.qmm.util.Log;
 
 import com.ibm.mq.MQException;
 
@@ -17,6 +18,8 @@ import com.ibm.mq.MQException;
  */
 public class Explorer {
 
+	private static Log log = Log.getLog(Explorer.class);
+	
 	/** The queue. */
 	private JMQQueue queue;
 
@@ -65,7 +68,7 @@ public class Explorer {
 			queue.refresh();
 			messages = queue.getAllJMQMessages();
 		} catch (MQException e) {
-			e.printStackTrace();
+			log.error(e);
 		}
 		return messages;
 	}

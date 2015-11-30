@@ -12,6 +12,7 @@ import javax.swing.JTextPane;
 import javax.swing.border.BevelBorder;
 
 import org.erc.qmm.mq.JMQMessage;
+import org.erc.qmm.util.Log;
 
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
@@ -24,6 +25,8 @@ import java.text.MessageFormat;
  */
 public class QueueItemWindow extends JFrame {
 
+	private static Log log = Log.getLog(QueueItemWindow.class);
+			
 	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = 151118672093734401L;
 
@@ -77,6 +80,7 @@ public class QueueItemWindow extends JFrame {
 			setTitle(MessageFormat.format("Queue Item {0} {1}",message.getPosition(), new String(message.getCorrelationId()) ));
 			textPane.setText(message.getMessageContents() + "\r\n\r\n\r\n" + new String(message.getData()));
 		} catch (IOException e) {
+			log.error(e);
 		}
 	}
 

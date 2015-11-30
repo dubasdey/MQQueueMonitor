@@ -7,6 +7,7 @@ import java.util.List;
 import javax.swing.AbstractListModel;
 import javax.xml.parsers.ParserConfigurationException;
 
+import org.erc.qmm.util.Log;
 import org.xml.sax.SAXException;
 
 /**
@@ -14,6 +15,8 @@ import org.xml.sax.SAXException;
  */
 public class QueueListDataModel extends AbstractListModel<QueueConfig> {
 
+	private static Log log = Log.getLog(QueueListDataModel.class);
+			
 	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = -3504381659399672144L;
 	
@@ -43,8 +46,7 @@ public class QueueListDataModel extends AbstractListModel<QueueConfig> {
 		try {
 			config.saveQueues(queues);
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			log.error(e);
 		}
 		
 	}

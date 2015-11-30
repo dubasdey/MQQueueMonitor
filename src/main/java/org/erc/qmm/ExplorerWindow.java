@@ -34,6 +34,7 @@ import org.erc.qmm.i18n.Messages;
 import org.erc.qmm.mq.JMQMessage;
 import org.erc.qmm.mq.JMQQueue;
 import org.erc.qmm.mq.MessageReadedListener;
+import org.erc.qmm.util.Log;
 
 
 /**
@@ -41,6 +42,8 @@ import org.erc.qmm.mq.MessageReadedListener;
  */
 public class ExplorerWindow extends JFrame {
 
+	private static Log log = Log.getLog(ExplorerWindow.class);
+			
 	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = -4239197809052439387L;
 
@@ -67,7 +70,6 @@ public class ExplorerWindow extends JFrame {
 		initialize();
 	}
 
-	
 	/**
 	 * Instantiates a new explorer window.
 	 *
@@ -155,7 +157,6 @@ public class ExplorerWindow extends JFrame {
 		table.setFillsViewportHeight(true);
 		table.setModel(model);
 		table.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
-			
 			@Override
 			public void valueChanged(ListSelectionEvent e) {
 				try {
@@ -169,7 +170,7 @@ public class ExplorerWindow extends JFrame {
 						}
 					}
 				} catch (Exception ex) {
-					ex.printStackTrace();
+					log.error(ex);
 				}
 			}
 		});
@@ -182,18 +183,14 @@ public class ExplorerWindow extends JFrame {
 	 * Load messages.
 	 */
 	private void loadMessages(){
-		
 		SwingWorker<List<JMQMessage>,Object> poller = new SwingWorker<List<JMQMessage>,Object>(){
-
 			@Override
 			protected List<JMQMessage> doInBackground() throws Exception {
 				lbStatus.setVisible(true);
 				pbStatus.setIndeterminate(true);
 				pbStatus.setVisible(true);
 				lbStatus.setText(Messages.getString("ExplorerWindow.loading_start")); //$NON-NLS-1$
-				
 				final Explorer explorer = new Explorer(queue);
-				
 				explorer.addMessageReadedListener(new MessageReadedListener() {
 					public void messageReaded(JMQMessage message) {
 						int max = explorer.getDepth();
@@ -217,9 +214,9 @@ public class ExplorerWindow extends JFrame {
 					List<JMQMessage> messages = get();
 					lbStatus.setText(messages.size()  + Messages.getString("ExplorerWindow.loaded_messages")); //$NON-NLS-1$
 				} catch (InterruptedException e) {
-					e.printStackTrace();
+					log.error(e);
 				} catch (ExecutionException e) {
-					e.printStackTrace();
+					log.error(e);
 				}
 			}
 			

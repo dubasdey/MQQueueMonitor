@@ -7,6 +7,7 @@ import java.util.Map.Entry;
 
 import org.erc.qmm.config.QueueConfig;
 import org.erc.qmm.mq.JMQQueue;
+import org.erc.qmm.util.Log;
 
 
 /**
@@ -14,6 +15,8 @@ import org.erc.qmm.mq.JMQQueue;
  */
 public class QueueMonitor extends Thread {
 
+	private static Log log = Log.getLog(QueueMonitor.class);
+			
 	/** The listeners. */
 	private List<PollListener> listeners;
 	
@@ -55,7 +58,6 @@ public class QueueMonitor extends Thread {
 	 * Check queue data.
 	 */
 	private void checkQueueData(){
-		
 		// First stat is dropped (data before monitor starts resetting)
 		Map<Integer,Object> items = queue.fetchStats();
 		if(initied){
@@ -92,7 +94,8 @@ public class QueueMonitor extends Thread {
 			try {
 				Thread.sleep(queue.getConfig().getPollTime() * 1000); // sleep for x seconds
 			} catch (InterruptedException e) {
-				System.out.println("ERROR: The monitor has been interrupted, exit...");
+				//TODO not error on exit
+				log.error(e);
 				break;
 			}
 		}
