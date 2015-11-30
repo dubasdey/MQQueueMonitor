@@ -3,7 +3,7 @@ package org.erc.qmm.config;
 /**
  * The Class Queue.
  */
-public class Queue {
+public class QueueConfig {
 	
 	/** The desc. */
 	private String desc;
@@ -30,14 +30,14 @@ public class Queue {
 	/**
 	 * Instantiates a new queue.
 	 */
-	public Queue(){}
+	public QueueConfig(){}
 	
 	/**
 	 * Instantiates a new queue.
 	 *
 	 * @param desc the desc
 	 */
-	public Queue(String desc){
+	public QueueConfig(String desc){
 		setDesc(desc);
 		setPort(1417);
 		setPollTime(5000);

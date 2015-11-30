@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.erc</groupId>
     <artifactId>org.erc.qmm</artifactId>
-    <version>0.1.0</version>
+    <version>0.1.1</version>
     <name>QueueMonitor</name>
     <packaging>jar</packaging>
     
@@ -24,6 +24,15 @@
 		    <scope>system</scope>
 		    <systemPath>${project.basedir}/lib/com.ibm.mq.pcf.jar</systemPath>
 		</dependency>
+		
+		<dependency>
+		    <groupId>com.ibm</groupId>
+		    <artifactId>connector</artifactId>
+		    <version>1.0</version>
+		    <scope>system</scope>
+		    <systemPath>${project.basedir}/lib/connector.jar</systemPath>
+		</dependency>
+				
     </dependencies>
 
     <build>
@@ -86,7 +95,7 @@
 		        	<dependencySet>
 						<scope>system</scope>
 					 	<includes>
-					    	<include>*:jar</include>
+					    	<include>*.jar</include>
 					  	</includes>
 					  	<outputDirectory>lib</outputDirectory>
 					</dependencySet>

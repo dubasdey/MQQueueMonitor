@@ -11,7 +11,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextPane;
 import javax.swing.border.BevelBorder;
 
-import org.erc.qmm.explorer.JMQMessage;
+import org.erc.qmm.mq.JMQMessage;
 
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;

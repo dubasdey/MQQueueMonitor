@@ -3,11 +3,12 @@ package org.erc.qmm.explorer;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Properties;
 
 import javax.swing.SwingUtilities;
 
-import org.erc.qmm.config.Queue;
+import org.erc.qmm.mq.JMQMessage;
+import org.erc.qmm.mq.JMQQueue;
+import org.erc.qmm.mq.MessageReadedListener;
 
 import com.ibm.mq.MQException;
 
@@ -17,7 +18,7 @@ import com.ibm.mq.MQException;
 public class Explorer {
 
 	/** The queue. */
-	private Queue queue;
+	private JMQQueue queue;
 
 	/** The depth. */
 	private int depth;
@@ -30,7 +31,7 @@ public class Explorer {
 	 *
 	 * @param queue the queue
 	 */
-	public Explorer (Queue queue){
+	public Explorer (JMQQueue queue){
 		this.queue = queue;
 		listeners =new ArrayList<MessageReadedListener>();
 	}
@@ -43,21 +44,9 @@ public class Explorer {
 	public List<JMQMessage> readAll(){
 		List<JMQMessage> messages = new ArrayList<JMQMessage>();
 		
-		Properties connectionProperties = new Properties();
-		connectionProperties.setProperty("HOST", queue.getHost());
-		connectionProperties.setProperty("PORT", String.valueOf(queue.getPort()));
-		connectionProperties.setProperty("CHANNEL", queue.getChannel());
-		connectionProperties.setProperty("QMNAME", queue.getManager());
-		
-		//connectionProperties.setProperty("USER_ID", value);
-		//connectionProperties.setProperty("PASSWORD", value);
-		
 		try {
-			JMQConnection connection = new JMQConnection(connectionProperties);
-			JMQManager manager = new JMQManager(queue.getManager(), connection);
-			JMQQueue mqQueue = manager.getQueue(queue.getName());
-			depth = mqQueue.getCurrentDepth();
-			mqQueue.addMessageReadedListener(new MessageReadedListener() {
+			depth = queue.getCurrentDepth();
+			queue.addMessageReadedListener(new MessageReadedListener() {
 				public void messageReaded(final JMQMessage message) {
 					try {
 						SwingUtilities.invokeAndWait(new Runnable() {
@@ -73,8 +62,8 @@ public class Explorer {
 					}
 				}
 			});
-			mqQueue.refresh();
-			messages = mqQueue.getAllJMQMessages();
+			queue.refresh();
+			messages = queue.getAllJMQMessages();
 		} catch (MQException e) {
 			e.printStackTrace();
 		}

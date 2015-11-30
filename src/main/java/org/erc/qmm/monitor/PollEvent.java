@@ -88,8 +88,10 @@ public final class PollEvent {
 	public void setMaxDepth(int maxDepth) {
 		this.maxDepth = maxDepth;
 	}
-	
-	
-	
-	
+
+	@Override
+	public String toString() {
+		return String.format("PollEvent [enqueued=%s, dequeued=%s, depth=%s, maxDepth=%s]", enqueued, dequeued, depth,maxDepth);
+	}
+
 }

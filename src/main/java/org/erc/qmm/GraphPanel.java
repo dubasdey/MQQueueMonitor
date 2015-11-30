@@ -9,16 +9,17 @@ import java.awt.Point;
 import java.awt.RenderingHints;
 import java.awt.Stroke;
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
+import java.util.Queue;
 
 import javax.swing.JPanel;
 
 public class GraphPanel extends JPanel{
 
 	private static final long serialVersionUID = -5872443737794862007L;
+	
+	private int maxValuesToStore = 1000;
 	
 	private static int padding = 25;
 	private static int labelPadding = 25;
@@ -27,54 +28,92 @@ public class GraphPanel extends JPanel{
 	private static int pointWidth = 4;
 	private static int numberYDivisions = 10;
 	
-	
-	private Map<String, List<Integer>> series;
+	private Queue<Integer> enqueued;
+	private Queue<Integer> dequeued;
+	private Queue<Integer> total;
 	
 	private int minValue = Integer.MAX_VALUE;
 	private int maxValue = Integer.MIN_VALUE;
 	
 	public GraphPanel(){
-		series 		= new HashMap<String,List<Integer>>();
-//		addScore("E",10);
-//		addScore("E",50);
-//		addScore("E",30);
-//		addScore("E",60);
-//		addScore("E",20);
-//		
-//		addScore("D",15);
-//		addScore("D",55);
-//		addScore("D",35);
-//		addScore("D",65);
-//		addScore("D",25);
-//		
-//		addScore("T",5);
-//		addScore("T",33);
-//		addScore("T",32);
-//		addScore("T",11);
-//		addScore("T",98);		
+		enqueued = new LinkedList<Integer>();
+		dequeued = new LinkedList<Integer>();
+		total = new LinkedList<Integer>();
+		this.setDoubleBuffered(true);	
 	}
 	
-	public void addScore(String serie,Integer en,Integer de,Integer depth){
-		addScore("T",depth);
-		addScore("D",de);
-		addScore("E",en);
+	public void addScore(Integer en,Integer de,Integer depth){
+		enqueued.add(en);
+		dequeued.add(de);
+		total.add(depth);
+		if(en<minValue){
+			minValue = en;
+		}
+		if(de<minValue){
+			minValue = de;
+		}
+		if(depth<minValue){
+			minValue = depth;
+		}
+		if(en>maxValue){
+			maxValue = en;
+		}
+		if(de>maxValue){
+			maxValue = de;
+		}
+		if(depth>maxValue){
+			maxValue = depth;
+		}
+		
+		purgeOld();
+		updateUI();
 	}
 	
-	private void addScore(String serie,Integer value){
-		if(!series.containsKey(serie)){
-			series.put(serie, new ArrayList<Integer>());
+	private int getMaxValue(Integer[] items){
+		int res = Integer.MIN_VALUE;
+		for(int item : items ){
+			if(item>res){
+				res = item;
+			}
 		}
-		if(value < minValue){
-			minValue = value;
+		return res;
+	}
+	private int getMinValue(Integer[] items){
+		int res = Integer.MAX_VALUE;
+		for(int item : items ){
+			if(item<res){
+				res = item;
+			}
 		}
-		if(value > maxValue){
-			maxValue = value;
-		}
-		series.get(serie).add(value);
-		invalidate();
-		repaint();
+		return res;
 	}
 	
+	private void purgeOld(){
+		if(enqueued.size()> maxValuesToStore){
+			int value1 = enqueued.poll();
+			int value2 = dequeued.poll();
+			int value3 = total.poll();
+			
+			if(value1 >= maxValue){
+				maxValue = getMaxValue(enqueued.toArray(new Integer[]{}));
+			}
+			if(value2 >= maxValue){
+				maxValue = getMaxValue(dequeued.toArray(new Integer[]{}));
+			}
+			if(value3 >= maxValue){
+				maxValue = getMaxValue(total.toArray(new Integer[]{}));
+			}
+			if(value1 <= minValue){
+				maxValue = getMinValue(enqueued.toArray(new Integer[]{}));
+			}
+			if(value2 <= minValue){
+				maxValue = getMinValue(dequeued.toArray(new Integer[]{}));
+			}
+			if(value3 <= minValue){
+				maxValue = getMinValue(total.toArray(new Integer[]{}));
+			}
+		}
+	}
 	
 	private void paintBase(Graphics2D g){
 		
@@ -85,7 +124,7 @@ public class GraphPanel extends JPanel{
         g.fillRect(padding + labelPadding, padding, getWidth() - (2 * padding) - labelPadding, getHeight() - 2 * padding - labelPadding);
         g.setColor(Color.BLACK); 
         
-        boolean hasData = !series.isEmpty();
+        boolean hasData = !enqueued.isEmpty();
 
         // create hatch marks and grid lines for y axis.
         for (int i = 0; i <= numberYDivisions; i++) {
@@ -119,20 +158,19 @@ public class GraphPanel extends JPanel{
 	}
 	
 	
-	private void paintSeries(Graphics2D g,Color seriesColor, List<Integer> scores){
+	private void paintSeries(Graphics2D g,Color seriesColor,Integer[] scores){
 		
 		// Escala
-		double xScale = ((double) getWidth() - (2 * padding) - labelPadding) / (scores.size() - 1);
+		double xScale = ((double) getWidth() - (2 * padding) - labelPadding) / (scores.length - 1);
         double yScale = ((double) getHeight() - 2 * padding - labelPadding) / (maxValue - minValue);
 
         // Puntos
         List<Point> graphPoints = new ArrayList<Point>();
-        for (int i = 0; i < scores.size(); i++) {
+        for (int i = 0; i < scores.length; i++) {
             int x1 = (int) (i * xScale + padding + labelPadding);
-            int y1 = (int) ((maxValue - scores.get(i)) * yScale + padding);
+            int y1 = (int) ((maxValue - scores[i]) * yScale + padding);
             graphPoints.add(new Point(x1, y1));
         }
-
 
         g.setColor(seriesColor);
         g.setStroke(GRAPH_STROKE);
@@ -149,21 +187,11 @@ public class GraphPanel extends JPanel{
 	@Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
-        
         Graphics2D g2 = (Graphics2D) g;
-        
         paintBase(g2);
-        for (Entry<String,List<Integer>> v:series.entrySet()){
-        	Color color = Color.BLUE;
-        	
-        	String serie = v.getKey();
-        	if (serie.equals("D")){
-        		color = Color.GREEN;
-        	}else if (serie.equals("E")){
-        		color = Color.RED;
-        	}
-        	
-        	paintSeries(g2,color,v.getValue());
-        }
+        paintSeries(g2,Color.BLUE,total.toArray(new Integer[]{}));
+        paintSeries(g2,Color.GREEN,enqueued.toArray(new Integer[]{}));
+        paintSeries(g2,Color.RED,dequeued.toArray(new Integer[]{}));
+
     }	
 }

@@ -12,13 +12,13 @@ import org.xml.sax.SAXException;
 /**
  * The Class QueueListDataModel.
  */
-public class QueueListDataModel extends AbstractListModel<Queue> {
+public class QueueListDataModel extends AbstractListModel<QueueConfig> {
 
 	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = -3504381659399672144L;
 	
 	/** The queues. */
-	private List<Queue> queues;
+	private List<QueueConfig> queues;
 	
 	/**
 	 * Reload.
@@ -61,7 +61,7 @@ public class QueueListDataModel extends AbstractListModel<Queue> {
 	 * @see javax.swing.ListModel#getElementAt(int)
 	 */
 	@Override
-	public Queue getElementAt(int index) {
+	public QueueConfig getElementAt(int index) {
 		if(queues!=null && queues.size()> index){
 			return queues.get(index);
 		}
@@ -73,7 +73,7 @@ public class QueueListDataModel extends AbstractListModel<Queue> {
 	 *
 	 * @param queue the queue
 	 */
-	public void remove(Queue queue){
+	public void remove(QueueConfig queue){
 		if(queues!=null){
 			queues.remove(queue);
 			fireContentsChanged(this, 0, queues.size()-1);
@@ -85,9 +85,9 @@ public class QueueListDataModel extends AbstractListModel<Queue> {
 	 *
 	 * @param queue the queue
 	 */
-	public void add(Queue queue){
+	public void add(QueueConfig queue){
 		if(queues==null){
-			queues = new ArrayList<Queue>();
+			queues = new ArrayList<QueueConfig>();
 		}	
 		if(queue!=null){
 			queues.add(queue);

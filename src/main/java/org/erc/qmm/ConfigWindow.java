@@ -23,7 +23,7 @@ import javax.swing.JTextField;
 import javax.swing.JSlider;
 import javax.xml.parsers.ParserConfigurationException;
 
-import org.erc.qmm.config.Queue;
+import org.erc.qmm.config.QueueConfig;
 import org.erc.qmm.config.QueueListDataModel;
 import org.erc.qmm.i18n.Messages;
 import org.erc.qmm.util.FocusTraversalOnArray;
@@ -70,13 +70,13 @@ public class ConfigWindow extends JDialog {
 	private JSlider sldPollTime ;
 	
 	/** The queue list. */
-	private JList<Queue> queueList;
+	private JList<QueueConfig> queueList;
 	
 	/** The queues. */
 	private QueueListDataModel queues;
 
 	/** The selected. */
-	private Queue selected;
+	private QueueConfig selected;
 	
 	/** The changes. */
 	private boolean changes;
@@ -202,7 +202,7 @@ public class ConfigWindow extends JDialog {
 		getContentPane().add(contentPanel, BorderLayout.CENTER);
 		contentPanel.setLayout(null);
 		
-		queueList = new JList<Queue>();
+		queueList = new JList<QueueConfig>();
 		queueList.addListSelectionListener(new ListSelectionListener() {
 			public void valueChanged(ListSelectionEvent e) {
 				selected = queueList.getSelectedValue();
@@ -222,7 +222,7 @@ public class ConfigWindow extends JDialog {
 		btnAdd.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				cleanForm();
-				selected = new Queue(Messages.getString("ConfigWindow.defaultname"));  //$NON-NLS-1$
+				selected = new QueueConfig(Messages.getString("ConfigWindow.defaultname"));  //$NON-NLS-1$
 				queues.add(selected);
 				queueList.setSelectedValue(selected, true);
 				loadFormWithSelected();

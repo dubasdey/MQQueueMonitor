@@ -6,6 +6,8 @@ import java.util.List;
 
 import javax.swing.table.AbstractTableModel;
 
+import org.erc.qmm.mq.JMQMessage;
+
 /**
  * The Class MessageDataModel.
  */

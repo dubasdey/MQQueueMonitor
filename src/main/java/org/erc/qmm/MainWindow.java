@@ -13,7 +13,7 @@ import javax.swing.JTabbedPane;
 import javax.swing.ImageIcon;
 
 import org.erc.qmm.config.Config;
-import org.erc.qmm.config.Queue;
+import org.erc.qmm.config.QueueConfig;
 import org.erc.qmm.i18n.Messages;
 
 import java.awt.event.KeyEvent;
@@ -137,8 +137,6 @@ public class MainWindow {
 						ExplorerWindow explorerWindow = new ExplorerWindow(panel.getQueue());
 						explorerWindow.setVisible(true);
 					}
-					
-					
 				}catch(Exception ex){
 					ex.printStackTrace();
 				}
@@ -161,8 +159,8 @@ public class MainWindow {
 		try {
 			Config config = new Config();
 			tabPanel.removeAll();
-			List<Queue> queues= config.loadQueues();
-			for(Queue queue: queues){
+			List<QueueConfig> queues= config.loadQueues();
+			for(QueueConfig queue: queues){
 				MonitorPanel panel = new MonitorPanel();
 				panel.loadWith(queue);
 				tabPanel.addTab(queue.getDesc(), icon, panel, null);

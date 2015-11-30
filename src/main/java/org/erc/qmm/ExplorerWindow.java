@@ -28,12 +28,12 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.JScrollPane;
 
-import org.erc.qmm.config.Queue;
 import org.erc.qmm.explorer.Explorer;
-import org.erc.qmm.explorer.JMQMessage;
 import org.erc.qmm.explorer.MessageDataModel;
-import org.erc.qmm.explorer.MessageReadedListener;
 import org.erc.qmm.i18n.Messages;
+import org.erc.qmm.mq.JMQMessage;
+import org.erc.qmm.mq.JMQQueue;
+import org.erc.qmm.mq.MessageReadedListener;
 
 
 /**
@@ -45,7 +45,7 @@ public class ExplorerWindow extends JFrame {
 	private static final long serialVersionUID = -4239197809052439387L;
 
 	/** The queue. */
-	private Queue queue;
+	private JMQQueue queue;
 	
 	/** The table. */
 	private JTable table;
@@ -73,7 +73,7 @@ public class ExplorerWindow extends JFrame {
 	 *
 	 * @param queue the queue
 	 */
-	public ExplorerWindow(Queue queue) {
+	public ExplorerWindow(JMQQueue queue) {
 		this();
 		this.queue = queue;
 		loadMessages();

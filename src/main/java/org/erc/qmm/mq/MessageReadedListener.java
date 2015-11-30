@@ -1,4 +1,4 @@
-package org.erc.qmm.explorer;
+package org.erc.qmm.mq;
 
 import java.util.EventListener;
 

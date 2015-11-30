@@ -70,8 +70,8 @@ public class Config {
 	 * @throws IOException Signals that an I/O exception has occurred.
 	 * @throws ParserConfigurationException the parser configuration exception
 	 */
-	public List<Queue> loadQueues() throws SAXException, IOException, ParserConfigurationException{
-		List<Queue> items= new ArrayList<Queue>();
+	public List<QueueConfig> loadQueues() throws SAXException, IOException, ParserConfigurationException{
+		List<QueueConfig> items= new ArrayList<QueueConfig>();
 		File xmlFile = new File("config/config.xml");
 		if(xmlFile.exists()){
 			DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
@@ -86,7 +86,7 @@ public class Config {
 				Node node = queuesList.item(i);
 				if (node.getNodeType() == Node.ELEMENT_NODE) {
 					Element eElement = (Element) node;
-					Queue queue = new Queue();
+					QueueConfig queue = new QueueConfig();
 					queue.setDesc(eElement.getAttribute("desc"));
 					queue.setHost(getText(eElement,"host"));
 					queue.setPort(getInt(eElement,"port"));
@@ -107,7 +107,7 @@ public class Config {
 	 * @param queues the queues
 	 * @throws IOException Signals that an I/O exception has occurred.
 	 */
-	public void saveQueues(List<Queue> queues) throws IOException{
+	public void saveQueues(List<QueueConfig> queues) throws IOException{
 		File xmlFile = new File("config/config.xml");
 		File configFilder = new File("config");
 		
@@ -122,7 +122,7 @@ public class Config {
 		StringBuilder builder = new StringBuilder();
 		builder.append("<config>\r\n");
 		builder.append("\t<queues>\r\n");
-		for(Queue queue:queues){
+		for(QueueConfig queue:queues){
 			builder.append("\t\t<queue desc=\"" + queue.getDesc()+"\">\r\n");
 			builder.append("\t\t\t<host>").append(queue.getHost()).append("</host>\r\n");
 			builder.append("\t\t\t<port>").append(queue.getPort()).append("</port>\r\n");

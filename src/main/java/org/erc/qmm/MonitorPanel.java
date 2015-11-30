@@ -8,11 +8,12 @@ import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
-import org.erc.qmm.config.Queue;
+import org.erc.qmm.config.QueueConfig;
 import org.erc.qmm.i18n.Messages;
 import org.erc.qmm.monitor.PollEvent;
 import org.erc.qmm.monitor.PollListener;
 import org.erc.qmm.monitor.QueueMonitor;
+import org.erc.qmm.mq.JMQQueue;
 
 /**
  * The Class MonitorPanel.
@@ -95,29 +96,27 @@ public class MonitorPanel extends JPanel {
 	private void add(int depth, int processed, int enqueued){
 		totalEnqueued += enqueued;
 		totalDequeued += processed;
-		
 		if(lastTime <1){
 			lastTime = startTime;
 		}
-		
 		long time = (System.currentTimeMillis() - lastTime) / 1000;
-		
-		inputPerSecond  = (enqueued / time);
-		outputPerSecond = (processed / time);
-		
-		if(inputPerSecond>maxInPerSecond){
-			maxInPerSecond = inputPerSecond;
-		}
-		if(outputPerSecond>maxOutPerSecond){
-			maxOutPerSecond = outputPerSecond;
-		}
 		lastTime = System.currentTimeMillis();
 		
-		itemsInputLabel.setText(MessageFormat.format(Messages.getString("MonitorPanel.totalinfoInput"),totalEnqueued,inputPerSecond,maxInPerSecond)); //$NON-NLS-1$
-		itemsOutputLabel.setText(MessageFormat.format(Messages.getString("MonitorPanel.totalinfoOutput"),totalDequeued,outputPerSecond,maxOutPerSecond)); //$NON-NLS-1$
+		if(time>0){
+			inputPerSecond  = (enqueued / time);
+			outputPerSecond = (processed / time);
 		
-		chart.addScore("ENQUEUED",enqueued,processed,depth);
-
+			if(inputPerSecond>maxInPerSecond){
+				maxInPerSecond = inputPerSecond;
+			}
+			if(outputPerSecond>maxOutPerSecond){
+				maxOutPerSecond = outputPerSecond;
+			}
+			itemsInputLabel.setText(MessageFormat.format(Messages.getString("MonitorPanel.totalinfoInput"),totalEnqueued,inputPerSecond,maxInPerSecond)); //$NON-NLS-1$
+			itemsOutputLabel.setText(MessageFormat.format(Messages.getString("MonitorPanel.totalinfoOutput"),totalDequeued,outputPerSecond,maxOutPerSecond)); //$NON-NLS-1$
+			chart.addScore(enqueued,processed,depth);
+		}
+		
 	}
 	
 	/**
@@ -140,14 +139,14 @@ public class MonitorPanel extends JPanel {
 	 * Load with.
 	 *
 	 * @param queue the queue
+	 * @throws Exception 
 	 */
-	public void loadWith(Queue queue){		
+	public void loadWith(QueueConfig queue) throws Exception{		
 		startTime = System.currentTimeMillis();
 		monitor = new QueueMonitor(queue);
 		monitor.addPollListener(new PollListener() {
 			@Override
 			public void action(PollEvent e) {
-				
 				add(e.getDepth(),e.getDequeued(), e.getEnqueued());
 				if (e.getMaxDepth() * 0.9 <e.getDepth()){
 					setAlarm(true);
@@ -164,7 +163,7 @@ public class MonitorPanel extends JPanel {
 	 *
 	 * @return the queue
 	 */
-	public Queue getQueue(){
+	public JMQQueue getQueue(){
 		return monitor.getQueue();
 	}
 }
