@@ -18,8 +18,6 @@ import com.ibm.mq.MQQueueManager;
 import com.ibm.mq.pcf.CMQC;
 import com.ibm.mq.pcf.CMQCFC;
 import com.ibm.mq.pcf.MQCFH;
-import com.ibm.mq.pcf.MQCFIL;
-import com.ibm.mq.pcf.MQCFIN;
 import com.ibm.mq.pcf.MQCFST;
 import com.ibm.mq.pcf.PCFAgent;
 import com.ibm.mq.pcf.PCFParameter;
@@ -70,15 +68,7 @@ public class JMQQueue extends MQQueue {
 		if(config.getChannel() != null){
 			mqProps.put("channel", config.getChannel());
 		}
-
-		//        if(properties.getProperty("USER_ID") != null){
-		//            mqProps.put("userID", properties.getProperty("USER_ID"));
-		//        }
-		//        if(properties.getProperty("PASSWORD") != null){
-		//            mqProps.put("password", properties.getProperty("PASSWORD"));
-		//        }
 		return new MQQueueManager(config.getManager(),mqProps);
-
 	}
 
 
@@ -249,9 +239,8 @@ public class JMQQueue extends MQQueue {
 		Map<Integer,Object> stats = new HashMap<Integer,Object>();
 		try {
 			
-			MQEnvironment.disableTracing ();
+			MQEnvironment.disableTracing();
 			MQException.log = null;
-			
 			
 			if(agentNode==null){
 				agentNode = new PCFAgent(queueConfig.getHost(),queueConfig.getPort(),queueConfig.getChannel());

@@ -99,7 +99,6 @@ public class ExplorerWindow extends JFrame {
 		JMenuItem mntmClose = new JMenuItem(Messages.getString("ExplorerWindow.close")); //$NON-NLS-1$
 		mnFile.add(mntmClose);
 		mnFile.addActionListener(new ActionListener() {
-			
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				dispose();
@@ -112,7 +111,6 @@ public class ExplorerWindow extends JFrame {
 		JMenuItem mntmReload = new JMenuItem(Messages.getString("ExplorerWindow.reload")); //$NON-NLS-1$
 		mnActions.add(mntmReload);
 		mntmReload.addActionListener(new ActionListener() {
-			
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				model.clearMessages();
@@ -123,7 +121,6 @@ public class ExplorerWindow extends JFrame {
 		JMenuItem mntmViewSelected = new JMenuItem(Messages.getString("ExplorerWindow.viewSelected")); //$NON-NLS-1$
 		mnActions.add(mntmViewSelected);
 		mntmViewSelected.addActionListener(new ActionListener() {
-			
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				model.clearMessages();
@@ -176,8 +173,6 @@ public class ExplorerWindow extends JFrame {
 				}
 			}
 		});
-		
-		//JScrollPane scrollPane = JTable.createScrollPaneForTable(table);
 		JScrollPane scrollPane = new JScrollPane(table);
 		getContentPane().add(scrollPane, BorderLayout.CENTER);
 	}
@@ -201,7 +196,6 @@ public class ExplorerWindow extends JFrame {
 				
 				explorer.addMessageReadedListener(new MessageReadedListener() {
 					public void messageReaded(JMQMessage message) {
-						
 						int max = explorer.getDepth();
 						int cur = message.getPosition();
 						lbStatus.setText(MessageFormat.format(Messages.getString("ExplorerWindow.loading_messages"), cur,max)); //$NON-NLS-1$
@@ -211,7 +205,6 @@ public class ExplorerWindow extends JFrame {
 						model.addMessage(message);
 					}
 				});
-				
 				return explorer.readAll();
 			}
 			
@@ -231,9 +224,7 @@ public class ExplorerWindow extends JFrame {
 			}
 			
 		};
-		
 		poller.execute();
-
 	}
 
 }

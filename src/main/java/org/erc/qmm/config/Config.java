@@ -134,7 +134,6 @@ public class Config {
 		}
 		builder.append("\t</queues>\r\n");
 		builder.append("</config>");
-		
 		FileUtils.store(xmlFile, builder.toString());
 	}
 	

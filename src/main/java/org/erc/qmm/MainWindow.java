@@ -51,7 +51,6 @@ public class MainWindow {
 	    			JFrame.setDefaultLookAndFeelDecorated(true);
 	    			JDialog.setDefaultLookAndFeelDecorated(true);
 	    			System.setProperty("sun.awt.noerasebackground", "true"); //$NON-NLS-1$ //$NON-NLS-2$
-	    			
 	    			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName()); //$NON-NLS-1$
 	    		}catch(Exception e){}
 	    		
@@ -72,7 +71,6 @@ public class MainWindow {
 	public MainWindow() {
 		initialize();
 		loadQueues();
-		
 	}
 
 	/**
@@ -142,15 +140,11 @@ public class MainWindow {
 				}
 			}
 		});
-
 		tabPanel = new JTabbedPane(JTabbedPane.TOP);
 		frmQueueMonitor.getContentPane().add(tabPanel, BorderLayout.CENTER);
-		
 	}
 	
-	
-	
-	
+
 	/**
 	 * Load queues.
 	 */

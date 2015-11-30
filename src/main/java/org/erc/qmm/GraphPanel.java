@@ -15,26 +15,53 @@ import java.util.Queue;
 
 import javax.swing.JPanel;
 
+/**
+ * JPanel to print 3 lines chart of acquired data.
+ */
 public class GraphPanel extends JPanel{
 
+	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = -5872443737794862007L;
 	
+	/** The max values to store. */
 	private int maxValuesToStore = 1000;
 	
-	private static int padding = 25;
-	private static int labelPadding = 25;
+	/** The padding. */
+	private static int padding = 20;
+	
+	/** The label padding. */
+	private static int labelPadding = 20;
+	
+	/** The grid color. */
 	private static Color gridColor = new Color(200, 200, 200, 200);
+	
+	/** The Constant GRAPH_STROKE. */
 	private static final Stroke GRAPH_STROKE = new BasicStroke(2f);
+	
+	/** The point width. */
 	private static int pointWidth = 4;
+	
+	/** The number y divisions. */
 	private static int numberYDivisions = 10;
 	
+	/** The enqueued. */
 	private Queue<Integer> enqueued;
+	
+	/** The dequeued. */
 	private Queue<Integer> dequeued;
+	
+	/** The total. */
 	private Queue<Integer> total;
 	
+	/** The min value. */
 	private int minValue = Integer.MAX_VALUE;
+	
+	/** The max value. */
 	private int maxValue = Integer.MIN_VALUE;
 	
+	/**
+	 * Instantiates a new graph panel.
+	 */
 	public GraphPanel(){
 		enqueued = new LinkedList<Integer>();
 		dequeued = new LinkedList<Integer>();
@@ -42,6 +69,13 @@ public class GraphPanel extends JPanel{
 		this.setDoubleBuffered(true);	
 	}
 	
+	/**
+	 * Adds the score.
+	 *
+	 * @param en the en
+	 * @param de the de
+	 * @param depth the depth
+	 */
 	public void addScore(Integer en,Integer de,Integer depth){
 		enqueued.add(en);
 		dequeued.add(de);
@@ -69,6 +103,12 @@ public class GraphPanel extends JPanel{
 		updateUI();
 	}
 	
+	/**
+	 * Gets the max value.
+	 *
+	 * @param items the items
+	 * @return the max value
+	 */
 	private int getMaxValue(Integer[] items){
 		int res = Integer.MIN_VALUE;
 		for(int item : items ){
@@ -78,6 +118,13 @@ public class GraphPanel extends JPanel{
 		}
 		return res;
 	}
+	
+	/**
+	 * Gets the min value.
+	 *
+	 * @param items the items
+	 * @return the min value
+	 */
 	private int getMinValue(Integer[] items){
 		int res = Integer.MAX_VALUE;
 		for(int item : items ){
@@ -88,6 +135,9 @@ public class GraphPanel extends JPanel{
 		return res;
 	}
 	
+	/**
+	 * Purge old.
+	 */
 	private void purgeOld(){
 		if(enqueued.size()> maxValuesToStore){
 			int value1 = enqueued.poll();
@@ -115,6 +165,11 @@ public class GraphPanel extends JPanel{
 		}
 	}
 	
+	/**
+	 * Paint base.
+	 *
+	 * @param g the g
+	 */
 	private void paintBase(Graphics2D g){
 		
 		g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
@@ -158,6 +213,13 @@ public class GraphPanel extends JPanel{
 	}
 	
 	
+	/**
+	 * Paint series.
+	 *
+	 * @param g the g
+	 * @param seriesColor the series color
+	 * @param scores the scores
+	 */
 	private void paintSeries(Graphics2D g,Color seriesColor,Integer[] scores){
 		
 		// Escala
@@ -184,6 +246,9 @@ public class GraphPanel extends JPanel{
 
 	}
 	
+	/* (non-Javadoc)
+	 * @see javax.swing.JComponent#paintComponent(java.awt.Graphics)
+	 */
 	@Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);

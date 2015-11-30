@@ -116,7 +116,6 @@ public class MonitorPanel extends JPanel {
 			itemsOutputLabel.setText(MessageFormat.format(Messages.getString("MonitorPanel.totalinfoOutput"),totalDequeued,outputPerSecond,maxOutPerSecond)); //$NON-NLS-1$
 			chart.addScore(enqueued,processed,depth);
 		}
-		
 	}
 	
 	/**
@@ -132,7 +131,6 @@ public class MonitorPanel extends JPanel {
 			alertLabel.setIcon(new ImageIcon(getClass().getResource(Images.OK))); //$NON-NLS-1$
 			alertLabel.setText(Messages.getString("MonitorPanel.alert_ok")); //$NON-NLS-1$
 		}
-	
 	}
 
 	/**

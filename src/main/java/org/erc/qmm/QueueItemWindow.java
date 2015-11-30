@@ -38,7 +38,6 @@ public class QueueItemWindow extends JFrame {
 	 * @wbp.parser.constructor
 	 */
 	public QueueItemWindow() {
-		
 		setIconImage(Toolkit.getDefaultToolkit().getImage(QueueItemWindow.class.getResource(Images.MESSAGE)));
 		setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 		setBounds(100, 100, 450, 300);

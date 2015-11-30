@@ -12,8 +12,7 @@ public class Messages {
 	private static final String BUNDLE_NAME = "org.erc.qmm.i18n.messages"; //$NON-NLS-1$
 
 	/** The Constant RESOURCE_BUNDLE. */
-	private static final ResourceBundle RESOURCE_BUNDLE = ResourceBundle
-			.getBundle(BUNDLE_NAME);
+	private static final ResourceBundle RESOURCE_BUNDLE = ResourceBundle.getBundle(BUNDLE_NAME);
 
 	/**
 	 * Instantiates a new messages.
