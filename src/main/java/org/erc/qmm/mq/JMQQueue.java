@@ -3,11 +3,14 @@ package org.erc.qmm.mq;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
 
 import org.erc.qmm.config.QueueConfig;
+import org.erc.qmm.mq.agent.ParameterMessage;
+import org.erc.qmm.mq.agent.ParameterString;
+import org.erc.qmm.mq.agent.Agent;
+import org.erc.qmm.mq.agent.Parameter;
 import org.erc.qmm.util.Log;
 
 import com.ibm.mq.MQEnvironment;
@@ -16,29 +19,39 @@ import com.ibm.mq.MQGetMessageOptions;
 import com.ibm.mq.MQMessage;
 import com.ibm.mq.MQQueue;
 import com.ibm.mq.MQQueueManager;
-import com.ibm.mq.pcf.CMQC;
-import com.ibm.mq.pcf.CMQCFC;
-import com.ibm.mq.pcf.MQCFH;
-import com.ibm.mq.pcf.MQCFST;
-import com.ibm.mq.pcf.PCFAgent;
-import com.ibm.mq.pcf.PCFParameter;
+
 
 /**
  * The Class JMQQueue.
  */
 public class JMQQueue extends MQQueue {
 
+	/** The log. */
 	private static Log log = Log.getLog(JMQQueue.class);
 	
-	public static final int MQIA_CURRENT_Q_DEPTH = CMQC.MQIA_CURRENT_Q_DEPTH;
-
-	public static final int MQIA_MAX_Q_DEPTH = CMQC.MQIA_MAX_Q_DEPTH;
-
-	public static final int MQIA_MSG_ENQ_COUNT = CMQC.MQIA_MSG_ENQ_COUNT;
-
-	public static final int MQIA_MSG_DEQ_COUNT = CMQC.MQIA_MSG_DEQ_COUNT;
-
-	public static final int MQIA_TIME_SINCE_RESET = CMQC.MQIA_TIME_SINCE_RESET;
+	 /** The Constant MQIA_CURRENT_Q_DEPTH. */
+ 	public static final int MQIA_CURRENT_Q_DEPTH = 3;
+	 
+ 	/** The Constant MQIA_MAX_Q_DEPTH. */
+ 	public static final int MQIA_MAX_Q_DEPTH = 15;
+	 
+ 	/** The Constant MQIA_MSG_ENQ_COUNT. */
+ 	public static final int MQIA_MSG_ENQ_COUNT = 37;
+	 
+ 	/** The Constant MQIA_MSG_DEQ_COUNT. */
+ 	public static final int MQIA_MSG_DEQ_COUNT = 38;
+	 
+ 	/** The Constant MQIA_TIME_SINCE_RESET. */
+ 	public static final int MQIA_TIME_SINCE_RESET = 35;
+	 
+ 	/** The Constant MQCA_Q_NAME. */
+ 	public static final int MQCA_Q_NAME = 2016;
+	 
+ 	/** The Constant MQCMD_INQUIRE_Q. */
+ 	public static final int MQCMD_INQUIRE_Q = 13;
+	 
+ 	/** The Constant MQCMD_RESET_Q_STATS. */
+ 	public static final int MQCMD_RESET_Q_STATS = 17;
 
 	/** The jmq messages. */
 	private List<JMQMessage> jmqMessages;
@@ -49,8 +62,10 @@ public class JMQQueue extends MQQueue {
 	/** The jmq mgr. */
 	private MQQueueManager jmqMgr;
 
-	private PCFAgent agentNode;
+	/** The agent node. */
+	private Agent agentNode;
 
+	/** The queue config. */
 	private QueueConfig queueConfig;
 
 	/** The listeners. */
@@ -59,34 +74,23 @@ public class JMQQueue extends MQQueue {
 	/** The limit. */
 	private int limit = 10000;
 
-	private static MQQueueManager buildManager(QueueConfig config) throws MQException{
-		Hashtable<String,Object> mqProps = new Hashtable<String,Object>();
-
-		if(config.getHost() != null){
-			mqProps.put("hostname", config.getHost());
-		}
-		if(config.getPort() >0 ){
-			mqProps.put("port",config.getPort());
-		}
-		if(config.getChannel() != null){
-			mqProps.put("channel", config.getChannel());
-		}
-		return new MQQueueManager(config.getManager(),mqProps);
-	}
-
-
+	/**
+	 * Instantiates a new JMQ queue.
+	 *
+	 * @param config the config
+	 * @throws MQException the MQ exception
+	 */
 	public JMQQueue(QueueConfig config) throws MQException {
-		this(buildManager(config),config.getName(),58);
+		this(MQUtils.buildManager(config),config.getName(),58);
 		this.queueConfig = config;
 	}
-
 
 
 	/**
 	 * Instantiates a new JMQ queue.
 	 *
 	 * @param jmqmanager the jmqmanager
-	 * @param s the s
+	 * @param queuename the queuename
 	 * @param i the i
 	 * @throws MQException the MQ exception
 	 */
@@ -239,6 +243,11 @@ public class JMQQueue extends MQQueue {
 		return s;
 	}
 
+	/**
+	 * Fetch stats.
+	 *
+	 * @return the map
+	 */
 	public synchronized Map<Integer,Object> fetchStats(){
 		Map<Integer,Object> stats = new HashMap<Integer,Object>();
 		try {
@@ -247,16 +256,16 @@ public class JMQQueue extends MQQueue {
 			MQException.log = null;
 			
 			if(agentNode==null){
-				agentNode = new PCFAgent(queueConfig.getHost(),queueConfig.getPort(),queueConfig.getChannel());
+				agentNode = new Agent(queueConfig.getHost(),queueConfig.getPort(),queueConfig.getChannel(),queueConfig.getManager());
 			}
 
-			PCFParameter[] params = new PCFParameter[]{ new MQCFST(CMQC.MQCA_Q_NAME, queueConfig.getName())};
+			Parameter[] params = new Parameter[]{ new ParameterString(MQCA_Q_NAME, queueConfig.getName())};
 			
 			// Requerido para obtener profundidades de cola
-			exec(agentNode.send(CMQCFC.MQCMD_INQUIRE_Q, params),stats);
+			exec(agentNode.send(MQCMD_INQUIRE_Q, params),stats);
 			
 			// Requerido para obtener entrada y salida de mensajes
-			exec(agentNode.send(CMQCFC.MQCMD_RESET_Q_STATS, params),stats);
+			exec(agentNode.send(MQCMD_RESET_Q_STATS, params),stats);
 
 		} catch (Exception ex) {
 			log.error(ex);
@@ -265,14 +274,22 @@ public class JMQQueue extends MQQueue {
 	}
 	
  
-	private void exec(MQMessage[] responses,Map<Integer,Object> fetch) throws MQException, IOException{
-		MQCFH cfh = null;
-		for (int i = 0; i < responses.length; i++) {
-			cfh = new MQCFH (responses [i]); 
+	/**
+	 * Exec.
+	 *
+	 * @param responses the responses
+	 * @param fetch the fetch
+	 * @throws MQException the MQ exception
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 */
+	private void exec(List<MQMessage> responses,Map<Integer,Object> fetch) throws MQException, IOException{
+		ParameterMessage cfh = null;
+		for(MQMessage response:responses){
+			cfh = new ParameterMessage (response); 
 			if (cfh.reason == 0){
 				if(fetch!=null){
 					for (int j = 0; j < cfh.parameterCount; j++) { 
-						PCFParameter p = PCFParameter.nextParameter(responses [i]);
+						Parameter p = Parameter.nextParameter(response);
 						fetch.put(p.getParameter(), p.getValue());
 					}
 				}
@@ -280,6 +297,9 @@ public class JMQQueue extends MQQueue {
 		}
 	}    
 
+	/**
+	 * Disconnect.
+	 */
 	public void disconnect(){
 		if(jmqMgr!=null){
 			try {

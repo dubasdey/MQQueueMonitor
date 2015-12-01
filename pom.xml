@@ -6,6 +6,31 @@
     <version>0.1.1</version>
     <name>QueueMonitor</name>
     <packaging>jar</packaging>
+    <url>https://github.com/dubasdey/MQQueueMonitor</url>
+    <scm>
+    	<url>https://github.com/dubasdey/MQQueueMonitor</url>
+    	<tag>master</tag>
+    </scm>
+    <issueManagement>
+    	<url>https://github.com/dubasdey/MQQueueMonitor/issues</url>
+    </issueManagement>
+    <ciManagement>
+    	<url>https://travis-ci.org/dubasdey/MQQueueMonitor</url>
+    	<system>TravisCI</system>
+    </ciManagement>
+    <description>Websphere MQ Monitoring tool</description>
+    <inceptionYear>2015</inceptionYear>
+    
+    <developers>
+    	<developer>
+    		<id>dubasdey</id>
+    		<url>https://github.com/dubasdey/</url>
+    		<roles>
+    			<role>Owner</role>
+    			<role>Developer</role>
+    		</roles>
+    	</developer>
+    </developers>
     
     <dependencies>
 		
@@ -15,14 +40,6 @@
 		    <version>1.0</version>
 		    <scope>system</scope>
 		    <systemPath>${project.basedir}/lib/com.ibm.mq.jar</systemPath>
-		</dependency>
-		
-		<dependency>
-		    <groupId>com.ibm</groupId>
-		    <artifactId>com.ibm.mq.pcf</artifactId>
-		    <version>1.0</version>
-		    <scope>system</scope>
-		    <systemPath>${project.basedir}/lib/com.ibm.mq.pcf.jar</systemPath>
 		</dependency>
 		
 		<dependency>
@@ -80,12 +97,13 @@
 					<finalName>${finalName}</finalName>
 					<appendAssemblyId>false</appendAssemblyId>
 					<archive>
+						<compress>true</compress>
 		        		<index>true</index>
 		          		<manifest>
 		            		<mainClass>org.erc.qmm.MainWindow</mainClass>
 		          		</manifest>
 		          		<manifestEntries>
-		          			<SplashScreen-Image>META-INF/startup.gif</SplashScreen-Image>
+		          			<SplashScreen-Image>META-INF/startup.gif</SplashScreen-Image> 
 		          			<Class-Path>lib/com.ibm.mq.jar lib/com.ibm.mq.pcf.jar lib/connector.jar</Class-Path>
 		          		</manifestEntries>
 		        	</archive>
@@ -93,9 +111,10 @@
 		          		<descriptorRef>jar-with-dependencies</descriptorRef>
 		        	</descriptorRefs>
 		        	<dependencySet>
+		        		<unpack>true</unpack>
 						<scope>system</scope>
 					 	<includes>
-					    	<include>*.jar</include>
+					    	<include>*:jar</include>
 					  	</includes>
 					  	<outputDirectory>lib</outputDirectory>
 					</dependencySet>
@@ -113,4 +132,3 @@
     	</plugins>
     </build>
 </project>
-    
