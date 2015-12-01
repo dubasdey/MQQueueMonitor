@@ -26,6 +26,9 @@ public class QueueConfig {
 	/** The name. */
 	private String name;
 
+	/** The active. */
+	private boolean active;
+	
 	/**
 	 * Instantiates a new queue.
 	 */
@@ -161,6 +164,24 @@ public class QueueConfig {
 	}
 
 	/**
+	 * Checks if is active.
+	 *
+	 * @return true, if is active
+	 */
+	public boolean isActive() {
+		return active;
+	}
+
+	/**
+	 * Sets the active.
+	 *
+	 * @param active the new active
+	 */
+	public void setActive(boolean active) {
+		this.active = active;
+	}
+	
+	/**
 	 * Sets the poll time.
 	 *
 	 * @param pollTime the new poll time
@@ -176,5 +197,7 @@ public class QueueConfig {
 	public String toString() {
 		return this.desc;
 	}
+
+
 	
 }

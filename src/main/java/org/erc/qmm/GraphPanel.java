@@ -183,12 +183,14 @@ public class GraphPanel extends JPanel{
 
         // create hatch marks and grid lines for y axis.
         for (int i = 0; i <= numberYDivisions; i++) {
+        	
             int x0 = padding + labelPadding;
             int x1 = pointWidth + padding + labelPadding;
             int y0 = getHeight() - ((i * (getHeight() - padding * 2 - labelPadding)) / numberYDivisions + padding + labelPadding);
             int y1 = y0;
             
             if(hasData){
+            	
 	            // Y Line
 	            g.setColor(gridColor);
 	            g.drawLine(padding + labelPadding + 1 + pointWidth, y0, getWidth() - padding, y1);
@@ -224,8 +226,14 @@ public class GraphPanel extends JPanel{
 		
 		// Escala
 		double xScale = ((double) getWidth() - (2 * padding) - labelPadding) / (scores.length - 1);
-        double yScale = ((double) getHeight() - 2 * padding - labelPadding) / (maxValue - minValue);
-
+		
+		double yScale = 0;
+		if (maxValue != minValue){
+			yScale = ((double) getHeight() - 2 * padding - labelPadding) / (maxValue - minValue);
+		}else{
+			yScale = 0;
+		}
+        
         // Puntos
         List<Point> graphPoints = new ArrayList<Point>();
         for (int i = 0; i < scores.length; i++) {

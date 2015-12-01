@@ -21,10 +21,6 @@ import org.xml.sax.SAXException;
  */
 public class Config {
 
-	/**
-	 * Instantiates a new config.
-	 */
-	public Config(){}
 	
 	/**
 	 * Gets the text.
@@ -62,6 +58,22 @@ public class Config {
 		return val;
 	}
 	
+	
+	/**
+	 * Gets the bool.
+	 *
+	 * @param parent the parent
+	 * @param tagName the tag name
+	 * @return the bool
+	 */
+	private boolean getBool(Element parent, String tagName){
+		String str = getText(parent,tagName);
+		boolean val= false;
+		if(str!=null && str.length()>0 && str.toLowerCase().trim().equals("true")){
+			val = true;
+		}
+		return val;
+	}	
 	/**
 	 * Load queues.
 	 *
@@ -91,6 +103,7 @@ public class Config {
 					queue.setManager(getText(eElement,"manager"));
 					queue.setChannel(getText(eElement,"channel"));
 					queue.setName(getText(eElement,"name"));
+					queue.setActive(getBool(eElement,"active"));
 					items.add(queue);
 				}
 			}
@@ -127,6 +140,7 @@ public class Config {
 			builder.append("\t\t\t<manager>").append(queue.getManager()).append("</manager>\r\n");
 			builder.append("\t\t\t<name>").append(queue.getName()).append("</name>\r\n");
 			builder.append("\t\t\t<poll>").append(queue.getPollTime()).append("</poll>\r\n");
+			builder.append("\t\t\t<poll>").append(queue.isActive()?"true":"false").append("</poll>\r\n");
 			builder.append("\t\t</queue>\r\n");
 		}
 		builder.append("\t</queues>\r\n");

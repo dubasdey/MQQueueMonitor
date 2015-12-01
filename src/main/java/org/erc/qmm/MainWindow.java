@@ -47,23 +47,17 @@ public class MainWindow {
 	public static void main(String[] args) {
         java.awt.EventQueue.invokeLater ( new Runnable() {
 	        public void run() {
-	        	
-	        	//IF substance jar is added . Use black Skin
 	    		try{
 	    			JFrame.setDefaultLookAndFeelDecorated(true);
 	    			JDialog.setDefaultLookAndFeelDecorated(true);
 	    			System.setProperty("sun.awt.noerasebackground", "true"); //$NON-NLS-1$ //$NON-NLS-2$
 	    			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName()); //$NON-NLS-1$
-	    		}catch(Exception e){}
-	    		
-				try {
 					MainWindow window = new MainWindow();
 					window.frmQueueMonitor.setVisible(true);
 				} catch (Exception e) {
 					log.error(e);
 				}
 	        }
-
         });
 	}
 
@@ -146,7 +140,6 @@ public class MainWindow {
 		frmQueueMonitor.getContentPane().add(tabPanel, BorderLayout.CENTER);
 	}
 	
-
 	/**
 	 * Load queues.
 	 */
@@ -154,16 +147,25 @@ public class MainWindow {
 		ImageIcon icon = new ImageIcon(MainWindow.class.getResource(Images.MESSAGE)); //$NON-NLS-1$
 		try {
 			Config config = new Config();
+			
+			// Stop monitors before remove panel
+			if(tabPanel.getTabCount()>0){
+				for (Component c :tabPanel.getComponents()){
+					if (c instanceof MonitorPanel){
+						MonitorPanel panel = (MonitorPanel)c;
+						panel.dispose();
+					}
+				}
+			}
 			tabPanel.removeAll();
 			List<QueueConfig> queues= config.loadQueues();
 			for(QueueConfig queue: queues){
-				MonitorPanel panel = new MonitorPanel();
-				panel.loadWith(queue);
-				tabPanel.addTab(queue.getDesc(), icon, panel, null);
+				if (queue.isActive()){
+					tabPanel.addTab(queue.getDesc(), icon, new MonitorPanel(queue), null);
+				}
 			}
 		} catch (Exception ex) {
 			log.error(ex);
 		} 
 	}
-
 }

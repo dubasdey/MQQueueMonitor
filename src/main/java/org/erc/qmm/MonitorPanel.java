@@ -86,6 +86,11 @@ public class MonitorPanel extends JPanel {
         
 	}
 
+	public MonitorPanel(QueueConfig queue) throws Exception {
+		this();
+		loadWith(queue);
+	}
+	
 	/**
 	 * Adds the.
 	 *
@@ -163,5 +168,9 @@ public class MonitorPanel extends JPanel {
 	 */
 	public JMQQueue getQueue(){
 		return monitor.getQueue();
+	}
+	
+	public void dispose(){
+		monitor.stopMonitoring();
 	}
 }

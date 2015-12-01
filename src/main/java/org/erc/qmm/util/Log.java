@@ -1,5 +1,6 @@
 package org.erc.qmm.util;
 
+import java.text.MessageFormat;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -19,6 +20,14 @@ public class Log {
 		log.log(Level.FINE, str);
 	}
 	
+	public void debug(String str,Object... params){
+		if(log.isLoggable(Level.FINE)){
+			if(params!=null){
+				str = MessageFormat.format(str, params);
+			}
+			log.log(Level.FINE, str);
+		}
+	}
 	public void error(String str){
 		log.log(Level.SEVERE, str);
 	}

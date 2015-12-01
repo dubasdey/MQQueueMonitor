@@ -26,7 +26,7 @@ public class QueueMonitor extends Thread {
 	/** The queue. */
 	private JMQQueue queue;
 	
-	private boolean initied = false;
+	private boolean running = false;
 	
 	/**
 	 * Instantiates a new queue monitor.
@@ -34,13 +34,15 @@ public class QueueMonitor extends Thread {
 	 * @param queue the queue
 	 * @throws MQException 
 	 */
-	public QueueMonitor(QueueConfig queue) throws Exception{
+	public QueueMonitor(QueueConfig queueConfig) throws Exception{
 		super();
-		setName("QueueMonitor-" + queue.getName());
+		setName("QueueMonitor-" + queueConfig.getName());
 		setDaemon(true);
-		this.queue = new JMQQueue(queue);
-		this.listeners = new ArrayList<PollListener>();
-		this.event =new PollEvent();
+		setPriority(MIN_PRIORITY);
+		queue = new JMQQueue(queueConfig);
+		listeners = new ArrayList<PollListener>();
+		event = new PollEvent();
+		running = true;
 	}
 	
 	/**
@@ -53,34 +55,32 @@ public class QueueMonitor extends Thread {
 			}
 		}
 	}
-	
+
+
 	/**
 	 * Check queue data.
 	 */
 	private void checkQueueData(){
+		log.debug("Checking data");
 		// First stat is dropped (data before monitor starts resetting)
 		Map<Integer,Object> items = queue.fetchStats();
-		if(initied){
-			for (Entry<Integer,Object> item:items.entrySet()){
-				switch(item.getKey()){
-				case JMQQueue.MQIA_CURRENT_Q_DEPTH:
-					 event.setDepth((Integer) item.getValue());
-			         break;
-				case JMQQueue.MQIA_MAX_Q_DEPTH:
-					 event.setMaxDepth( (Integer) item.getValue());
-			         break;
-				case JMQQueue.MQIA_MSG_ENQ_COUNT:
-					 event.setEnqueued((Integer) item.getValue());
-			         break;
-				case JMQQueue.MQIA_MSG_DEQ_COUNT:
-					 event.setDequeued((Integer) item.getValue());
-			         break;
-				}
+		for (Entry<Integer,Object> item:items.entrySet()){
+			switch(item.getKey()){
+			case JMQQueue.MQIA_CURRENT_Q_DEPTH:
+				 event.setDepth((Integer) item.getValue());
+		         break;
+			case JMQQueue.MQIA_MAX_Q_DEPTH:
+				 event.setMaxDepth( (Integer) item.getValue());
+		         break;
+			case JMQQueue.MQIA_MSG_ENQ_COUNT:
+				 event.setEnqueued((Integer) item.getValue());
+		         break;
+			case JMQQueue.MQIA_MSG_DEQ_COUNT:
+				 event.setDequeued((Integer) item.getValue());
+		         break;
 			}
-			emitEvent();	
 		}
-		initied = true;
-		
+		log.debug("Checking data {0}", event);
 	}
 	
 	/* (non-Javadoc)
@@ -89,13 +89,17 @@ public class QueueMonitor extends Thread {
 	@Override
 	public void run() {
 		super.run();
-		while (true) {
+		
+		// Init stats on MQ before loop
+		checkQueueData();
+		
+		// Stat lopp
+		while (running) {
 			checkQueueData();
+			emitEvent();
 			try {
 				Thread.sleep(queue.getConfig().getPollTime() * 1000); // sleep for x seconds
 			} catch (InterruptedException e) {
-				//TODO not error on exit
-				log.error(e);
 				break;
 			}
 		}
@@ -118,4 +122,9 @@ public class QueueMonitor extends Thread {
 	public JMQQueue getQueue() {
 		return queue;
 	}	
+	
+	public void stopMonitoring(){
+		running = false;
+		interrupt();
+	}
 }
