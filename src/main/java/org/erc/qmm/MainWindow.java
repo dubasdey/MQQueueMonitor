@@ -12,7 +12,7 @@ import javax.swing.UIManager;
 import javax.swing.JTabbedPane;
 import javax.swing.ImageIcon;
 
-import org.erc.qmm.config.Config;
+import org.erc.qmm.config.ConfigManager;
 import org.erc.qmm.config.QueueConfig;
 import org.erc.qmm.i18n.Messages;
 import org.erc.qmm.util.Log;
@@ -146,7 +146,7 @@ public class MainWindow {
 	private void loadQueues(){
 		ImageIcon icon = new ImageIcon(MainWindow.class.getResource(Images.MESSAGE)); //$NON-NLS-1$
 		try {
-			Config config = new Config();
+			ConfigManager config = new ConfigManager();
 			
 			// Stop monitors before remove panel
 			if(tabPanel.getTabCount()>0){

@@ -19,7 +19,7 @@ import org.xml.sax.SAXException;
 /**
  * The Class Config.
  */
-public class Config {
+public class ConfigManager {
 
 	
 	/**
@@ -140,7 +140,7 @@ public class Config {
 			builder.append("\t\t\t<manager>").append(queue.getManager()).append("</manager>\r\n");
 			builder.append("\t\t\t<name>").append(queue.getName()).append("</name>\r\n");
 			builder.append("\t\t\t<poll>").append(queue.getPollTime()).append("</poll>\r\n");
-			builder.append("\t\t\t<poll>").append(queue.isActive()?"true":"false").append("</poll>\r\n");
+			builder.append("\t\t\t<active>").append(queue.isActive()?"true":"false").append("</active>\r\n");
 			builder.append("\t\t</queue>\r\n");
 		}
 		builder.append("\t</queues>\r\n");

@@ -31,7 +31,7 @@ public class QueueListDataModel extends AbstractListModel<QueueConfig> {
 	 * @throws ParserConfigurationException the parser configuration exception
 	 */
 	public synchronized void reload() throws SAXException, IOException, ParserConfigurationException{
-		Config config = new Config();
+		ConfigManager config = new ConfigManager();
 		queues = config.loadQueues();
 		if(queues!=null && queues.size()>0){
 			fireContentsChanged(this, 0, queues.size()-1);
@@ -42,7 +42,7 @@ public class QueueListDataModel extends AbstractListModel<QueueConfig> {
 	 * Save.
 	 */
 	public synchronized void save(){
-		Config config = new Config();
+		ConfigManager config = new ConfigManager();
 		try {
 			config.saveQueues(queues);
 		} catch (IOException e) {
