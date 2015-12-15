@@ -14,12 +14,15 @@ import org.erc.qmm.monitor.PollEvent;
 import org.erc.qmm.monitor.PollListener;
 import org.erc.qmm.monitor.QueueMonitor;
 import org.erc.qmm.mq.JMQQueue;
+import org.erc.qmm.util.Log;
 
 /**
  * The Class MonitorPanel.
  */
 public class MonitorPanel extends JPanel {
 
+	private static Log log = Log.getLog(MonitorPanel.class);
+	
 	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = 1181783867179893568L;
 
@@ -88,6 +91,7 @@ public class MonitorPanel extends JPanel {
 
 	public MonitorPanel(QueueConfig queue) throws Exception {
 		this();
+		log.debug("Loading monitor for Queue");
 		loadWith(queue);
 	}
 	
@@ -99,6 +103,8 @@ public class MonitorPanel extends JPanel {
 	 * @param enqueued the enqueued
 	 */
 	private void add(int depth, int processed, int enqueued){
+		log.debug("Added IN:{0} OUT:{1} DEPTH:{2}",enqueued,processed,depth);
+		
 		totalEnqueued += enqueued;
 		totalDequeued += processed;
 		if(lastTime <1){
@@ -113,9 +119,11 @@ public class MonitorPanel extends JPanel {
 		
 			if(inputPerSecond>maxInPerSecond){
 				maxInPerSecond = inputPerSecond;
+				log.debug("New max input:{0}",maxInPerSecond);
 			}
 			if(outputPerSecond>maxOutPerSecond){
 				maxOutPerSecond = outputPerSecond;
+				log.debug("New max output:{0}",maxOutPerSecond);
 			}
 			itemsInputLabel.setText(MessageFormat.format(Messages.getString("MonitorPanel.totalinfoInput"),totalEnqueued,inputPerSecond,maxInPerSecond)); //$NON-NLS-1$
 			itemsOutputLabel.setText(MessageFormat.format(Messages.getString("MonitorPanel.totalinfoOutput"),totalDequeued,outputPerSecond,maxOutPerSecond)); //$NON-NLS-1$
@@ -130,9 +138,11 @@ public class MonitorPanel extends JPanel {
 	 */
 	private void setAlarm(boolean on){
 		if (on){
+			log.debug("Alarm activated");
 			alertLabel.setIcon(new ImageIcon(getClass().getResource(Images.ALERT))); //$NON-NLS-1$
 			alertLabel.setText(Messages.getString("MonitorPanel.alert_bad")); //$NON-NLS-1$
 		}else{
+			log.debug("Alarm deactivated");
 			alertLabel.setIcon(new ImageIcon(getClass().getResource(Images.OK))); //$NON-NLS-1$
 			alertLabel.setText(Messages.getString("MonitorPanel.alert_ok")); //$NON-NLS-1$
 		}

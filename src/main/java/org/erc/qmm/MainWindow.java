@@ -45,6 +45,9 @@ public class MainWindow {
 	 * @param args the arguments
 	 */
 	public static void main(String[] args) {
+		
+		Log.configureLogger();
+		
         java.awt.EventQueue.invokeLater ( new Runnable() {
 	        public void run() {
 	    		try{

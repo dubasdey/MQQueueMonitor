@@ -27,6 +27,7 @@ import org.erc.qmm.config.QueueConfig;
 import org.erc.qmm.config.QueueListDataModel;
 import org.erc.qmm.i18n.Messages;
 import org.erc.qmm.util.FocusTraversalOnArray;
+import org.erc.qmm.util.Log;
 import org.xml.sax.SAXException;
 
 import javax.swing.event.ChangeEvent;
@@ -45,6 +46,10 @@ import java.awt.Component;
  */
 public class ConfigWindow extends JDialog {
 
+	
+	private static Log log = Log.getLog(ConfigWindow.class);
+	
+	
 	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = 3910825248241443146L;
 	
@@ -395,6 +400,7 @@ public class ConfigWindow extends JDialog {
 	 * @throws ParserConfigurationException the parser configuration exception
 	 */
 	private void loadConfig() throws SAXException, IOException, ParserConfigurationException{
+		log.debug("Loading config");
 		queues = new QueueListDataModel();
 		queues.reload();
 		queueList.setModel(queues);
@@ -404,5 +410,6 @@ public class ConfigWindow extends JDialog {
 			queueList.setSelectedValue(selected, true);
 			loadFormWithSelected();
 		}	
+		log.debug("Loaded config");
 	}
 }

@@ -183,6 +183,9 @@ public class ExplorerWindow extends JFrame {
 	 * Load messages.
 	 */
 	private void loadMessages(){
+		
+		log.debug("Loading messages");
+		
 		SwingWorker<List<JMQMessage>,Object> poller = new SwingWorker<List<JMQMessage>,Object>(){
 			@Override
 			protected List<JMQMessage> doInBackground() throws Exception {
@@ -208,6 +211,7 @@ public class ExplorerWindow extends JFrame {
 			@Override
 			protected void done() {
 				super.done();
+				log.debug("Done loading messages");
 				lbStatus.setVisible(true);
 				pbStatus.setVisible(false);
 				try {

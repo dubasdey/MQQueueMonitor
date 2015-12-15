@@ -58,7 +58,6 @@ public class QueueItemWindow extends JFrame {
 		buttonPane.setLayout(new FlowLayout(FlowLayout.RIGHT));
 		getContentPane().add(buttonPane, BorderLayout.SOUTH);
 			
-			
 		JButton cancelButton = new JButton("Close");
 		cancelButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {

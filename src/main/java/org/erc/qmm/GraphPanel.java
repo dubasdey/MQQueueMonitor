@@ -15,11 +15,15 @@ import java.util.Queue;
 
 import javax.swing.JPanel;
 
+import org.erc.qmm.util.Log;
+
 /**
  * JPanel to print 3 lines chart of acquired data.
  */
 public class GraphPanel extends JPanel{
 
+	private static Log log = Log.getLog(GraphPanel.class);
+	
 	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = -5872443737794862007L;
 	
@@ -77,6 +81,7 @@ public class GraphPanel extends JPanel{
 	 * @param depth the depth
 	 */
 	public void addScore(Integer en,Integer de,Integer depth){
+		log.debug("Adding score In:{0} Out:{1} Depth:{2}",en,de,depth);
 		enqueued.add(en);
 		dequeued.add(de);
 		total.add(depth);
@@ -139,7 +144,9 @@ public class GraphPanel extends JPanel{
 	 * Purge old.
 	 */
 	private void purgeOld(){
+		log.debug("Purge Old values?");
 		if(enqueued.size()> maxValuesToStore){
+			log.debug("Required to purge");
 			int value1 = enqueued.poll();
 			int value2 = dequeued.poll();
 			int value3 = total.poll();
@@ -162,6 +169,8 @@ public class GraphPanel extends JPanel{
 			if(value3 <= minValue){
 				maxValue = getMinValue(total.toArray(new Integer[]{}));
 			}
+		}else{
+			log.debug("No required to purge");
 		}
 	}
 	
@@ -171,6 +180,7 @@ public class GraphPanel extends JPanel{
 	 * @param g the g
 	 */
 	private void paintBase(Graphics2D g){
+		log.debug("Painting base");
 		
 		g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 		
@@ -262,8 +272,14 @@ public class GraphPanel extends JPanel{
         super.paintComponent(g);
         Graphics2D g2 = (Graphics2D) g;
         paintBase(g2);
+        
+        log.debug("Painting scores total");
         paintSeries(g2,Color.BLUE,total.toArray(new Integer[]{}));
+        
+        log.debug("Painting scores enqueued");
         paintSeries(g2,Color.GREEN,enqueued.toArray(new Integer[]{}));
+        
+        log.debug("Painting scores dequeued");
         paintSeries(g2,Color.RED,dequeued.toArray(new Integer[]{}));
 
     }	
