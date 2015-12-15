@@ -66,11 +66,16 @@ public class ConfigManager {
 	 * @param tagName the tag name
 	 * @return the bool
 	 */
-	private boolean getBool(Element parent, String tagName){
+	private boolean getBool(Element parent, String tagName,boolean _default){
+		boolean val= _default;
 		String str = getText(parent,tagName);
-		boolean val= false;
-		if(str!=null && str.length()>0 && str.toLowerCase().trim().equals("true")){
-			val = true;
+		if(str!=null && str.length()>0){
+			str = str.toLowerCase().trim();
+			if(str.equals("true")){
+				val = true;
+			}else if (str.equals("false")){
+				val = false;
+			}
 		}
 		return val;
 	}	
@@ -103,7 +108,7 @@ public class ConfigManager {
 					queue.setManager(getText(eElement,"manager"));
 					queue.setChannel(getText(eElement,"channel"));
 					queue.setName(getText(eElement,"name"));
-					queue.setActive(getBool(eElement,"active"));
+					queue.setActive(getBool(eElement,"active",true));
 					items.add(queue);
 				}
 			}

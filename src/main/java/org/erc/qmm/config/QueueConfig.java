@@ -32,7 +32,11 @@ public class QueueConfig {
 	/**
 	 * Instantiates a new queue.
 	 */
-	public QueueConfig(){}
+	public QueueConfig(){
+		active = true;
+		setPort(1417);
+		setPollTime(5000);
+	}
 	
 	/**
 	 * Instantiates a new queue.
@@ -40,9 +44,8 @@ public class QueueConfig {
 	 * @param desc the desc
 	 */
 	public QueueConfig(String desc){
+		this();
 		setDesc(desc);
-		setPort(1417);
-		setPollTime(5000);
 	}
 	
 	

@@ -46,9 +46,7 @@ import java.awt.Component;
  */
 public class ConfigWindow extends JDialog {
 
-	
 	private static Log log = Log.getLog(ConfigWindow.class);
-	
 	
 	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = 3910825248241443146L;
