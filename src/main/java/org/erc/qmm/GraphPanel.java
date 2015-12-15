@@ -31,7 +31,7 @@ public class GraphPanel extends JPanel{
 	private int maxValuesToStore = 1000;
 	
 	/** The padding. */
-	private static int padding = 20;
+	private static int padding = 10;
 	
 	/** The label padding. */
 	private static int labelPadding = 20;
@@ -283,4 +283,5 @@ public class GraphPanel extends JPanel{
         paintSeries(g2,Color.RED,dequeued.toArray(new Integer[]{}));
 
     }	
+	
 }

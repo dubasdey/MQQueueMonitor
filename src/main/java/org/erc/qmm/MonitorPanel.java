@@ -1,9 +1,11 @@
 package org.erc.qmm;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.FlowLayout;
 import java.text.MessageFormat;
 
+import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -14,6 +16,7 @@ import org.erc.qmm.monitor.PollEvent;
 import org.erc.qmm.monitor.PollListener;
 import org.erc.qmm.monitor.QueueMonitor;
 import org.erc.qmm.mq.JMQQueue;
+import org.erc.qmm.util.GraphicUtils;
 import org.erc.qmm.util.Log;
 
 /**
@@ -73,7 +76,26 @@ public class MonitorPanel extends JPanel {
 		setLayout(new BorderLayout());
 		add(chart);
 		
+		JPanel leyendPanel = new JPanel(new FlowLayout());
 		JPanel alertPanel = new JPanel(new FlowLayout());
+		
+		JLabel inLabel = new JLabel(GraphicUtils.createColorIcon(Color.GREEN));
+		inLabel.setText(Messages.getString("MonitorPanel.enqueued")); //$NON-NLS-1$
+		leyendPanel.add(inLabel);
+		
+		JLabel outLabel = new JLabel(GraphicUtils.createColorIcon(Color.RED));
+		outLabel.setText(Messages.getString("MonitorPanel.processed")); //$NON-NLS-1$
+		leyendPanel.add(outLabel);
+		
+		JLabel depthLabel  = new JLabel(GraphicUtils.createColorIcon(Color.blue));
+		depthLabel.setText(Messages.getString("MonitorPanel.messages")); //$NON-NLS-1$
+		leyendPanel.add(depthLabel);
+		
+		leyendPanel.setBorder(BorderFactory.createMatteBorder(0, 0, 0, 1, Color.gray) );
+		
+		alertPanel.add(leyendPanel);
+		
+		
 		alertLabel = new JLabel(new ImageIcon(getClass().getResource(Images.OK))); //$NON-NLS-1$
 		alertLabel.setText(Messages.getString("MonitorPanel.alert_ok")); //$NON-NLS-1$
 		alertPanel.add(alertLabel);
