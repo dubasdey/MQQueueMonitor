@@ -123,19 +123,9 @@ public abstract class Parameter extends ParameterHeader implements Serializable 
 		if (string == null) {
 			return 0;
 		}
-
 		int pos = message.getDataOffset();
 		message.writeString(string);
 		return message.getDataOffset() - pos;
-	}
-
-	/**
-	 * Gets the header version.
-	 *
-	 * @return the header version
-	 */
-	public int getHeaderVersion() {
-		return 1;
 	}
 
 }

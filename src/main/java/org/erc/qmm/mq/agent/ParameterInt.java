@@ -45,8 +45,7 @@ public class ParameterInt extends Parameter {
 	/**
 	 * Instantiates a new parameter int.
 	 */
-	public ParameterInt() {
-	}
+	public ParameterInt() {}
 
 	/**
 	 * Instantiates a new parameter int.
@@ -172,10 +171,8 @@ public class ParameterInt extends Parameter {
 		return false;
 	}
 
-	/* (non-Javadoc)
-	 * @see java.lang.Object#toString()
-	 */
+	@Override
 	public String toString() {
-		return getUnqualifiedClassName() + " [type: 3, strucLength: 16, parameter: " + this.parameter + ", value: " + this.value + "]";
+		return String.format("ParameterInt [parameter=%s, value=%s]", parameter, value);
 	}
 }

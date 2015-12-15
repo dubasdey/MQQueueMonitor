@@ -189,8 +189,8 @@ public class ParameterMessage extends ParameterHeader {
 	@Override
 	public String toString() {
 		return String.format(
-				"% [type=%s, version=%s, command=%s, msgSeqNumber=%s, control=%s, compCode=%s, reason=%s, parameterCount=%s]",
-				getUnqualifiedClassName(), type, version, command, msgSeqNumber, control, compCode, reason, parameterCount);
+				"ParameterMessage [type=%s, version=%s, command=%s, msgSeqNumber=%s, control=%s, compCode=%s, reason=%s, parameterCount=%s]",
+				 type, version, command, msgSeqNumber, control, compCode, reason, parameterCount);
 	}
 
 

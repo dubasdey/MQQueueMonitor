@@ -205,7 +205,7 @@ public class ParameterString extends Parameter {
 	 */
 	public void setString(String string) {
 		try {
-			this.codedCharSetId = Agent.defaultCharacterSet;
+			this.codedCharSetId = 0;
 			int stringLength = Parameter.getStringLength(string, this.codedCharSetId);
 			int padLength = stringLength % 4;
 			if (padLength != 0) {
@@ -234,10 +234,10 @@ public class ParameterString extends Parameter {
 		return false;
 	}
 
-	/* (non-Javadoc)
-	 * @see java.lang.Object#toString()
-	 */
+	@Override
 	public String toString() {
-		return getUnqualifiedClassName() + " [type: 4, strucLength: " + this.strucLength + ", parameter: " + this.parameter  + ", codedCharSetId: " + this.codedCharSetId + ", stringLength: " + this.stringLength + ", string: " + this.string + "]";
+		return String.format(
+				"ParameterString [strucLength=%s, parameter=%s, codedCharSetId=%s, stringLength=%s, string=%s]",
+				strucLength, parameter, codedCharSetId, stringLength, string);
 	}
 }

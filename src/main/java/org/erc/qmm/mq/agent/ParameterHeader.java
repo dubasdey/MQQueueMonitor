@@ -36,19 +36,6 @@ public abstract class ParameterHeader {
 	public abstract int size();
 
 	/**
-	 * Gets the unqualified class name.
-	 *
-	 * @return the unqualified class name
-	 */
-	protected final String getUnqualifiedClassName() {
-		String className = getClass().getName();
-		if (className.lastIndexOf('.') > 0) {
-			className = className.substring(className.lastIndexOf('.') + 1);
-		}
-		return className;
-	}
-
-	/**
 	 * Read string.
 	 *
 	 * @param message the message

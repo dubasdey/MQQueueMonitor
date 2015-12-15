@@ -45,29 +45,28 @@ class AgentResponseTracker {
 	 * @throws IOException Signals that an I/O exception has occurred.
 	 */
 	boolean isLast(MQMessage response) throws MQException, IOException {
-		this.cfh.initialize(response);
+		cfh.initialize(response);
 		boolean result = false;
-		
 		if(TYPE_390 == type){
 			String current = null;
-			int count = this.cfh.parameterCount;
+			int count = cfh.parameterCount;
 			while (count-- > 0) {
 				Parameter p = Parameter.nextParameter(response);
 				int id = p.getParameter();
 				if (id == 7003) {
-					this.set.add(p.getStringValue());
+					set.add(p.getStringValue());
 				} else if (id == 7004) {
-					this.set.add(current = p.getStringValue());
+					set.add(current = p.getStringValue());
 				}
 			}
 			response.seek(0);
-			if ((this.cfh.control == 1) && (current != null)) {
-				this.set.remove(current);
+			if ((cfh.control == 1) && (current != null)) {
+				set.remove(current);
 			}
-			result = this.set.size() == 0;
+			result = set.size() == 0;
 		}else{
 		    response.seek(0);
-		    result= this.cfh.control == 1;
+		    result= cfh.control == 1;
 		}
 		return result;
 	}

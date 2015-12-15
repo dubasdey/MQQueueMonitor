@@ -80,7 +80,6 @@ public class ParameterIntArray extends Parameter {
 	 * @see org.erc.qmm.mq.agent.ParameterHeader#initialize(com.ibm.mq.MQMessage)
 	 */
 	public void initialize(MQMessage message) throws MQException, IOException {
-		
 		if (message.readInt() != 5) {
 			throw new MQException(2, 3013, message);
 		}
@@ -224,20 +223,18 @@ public class ParameterIntArray extends Parameter {
 	 */
 	public String toString() {
 		StringBuffer sb = new StringBuffer();
-		sb.append(getUnqualifiedClassName());
-		sb.append(" [type: 5");
-		sb.append(", strucLength: " + this.strucLength);
-		sb.append(", parameter: " + this.parameter);
-		sb.append(", count: " + this.count);
+		sb.append("ParameterIntArray [type: 5");
+		sb.append(", strucLength: ").append(this.strucLength);
+		sb.append(", parameter: ").append(this.parameter);
+		sb.append(", count: ").append(this.count);
 		sb.append(", values: ");
 		int[] values = this.values;
 		if (values != null) {
 			sb.append('{');
-			for (int i = 0; i < values.length; i++) {
-				sb.append(values[i]);
-				sb.append(", ");
-			}
 			if (values.length > 0){
+				for (int i = 0; i < values.length; i++) {
+					sb.append(values[i]).append(", ");
+				}
 				sb.setLength(sb.length() - 2);
 			}
 			sb.append('}');

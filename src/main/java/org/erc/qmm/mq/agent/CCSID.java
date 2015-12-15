@@ -9,7 +9,7 @@ import java.util.Hashtable;
 public class CCSID {
 	
 	/** The Constant ht. */
-	static final Hashtable<Integer,String> ht = new Hashtable<Integer,String>();
+	private static final Hashtable<Integer,String> ht = new Hashtable<Integer,String>();
 
 	static {
 		addCodepage(0, System.getProperty("file.encoding"));
@@ -108,8 +108,8 @@ public class CCSID {
 	 * @param ccsid the ccsid
 	 * @param codepage the codepage
 	 */
-	public static void addCodepage(int ccsid, String codepage) {
-		ht.put(new Integer(ccsid), codepage);
+	public static void addCodepage(Integer ccsid, String codepage) {
+		ht.put(ccsid, codepage);
 	}
 
 	/**
@@ -119,8 +119,8 @@ public class CCSID {
 	 * @return the codepage
 	 * @throws UnsupportedEncodingException the unsupported encoding exception
 	 */
-	public static String getCodepage(int ccsid) throws UnsupportedEncodingException {
-		String codepage = (String) ht.get(new Integer(ccsid));
+	public static String getCodepage(Integer ccsid) throws UnsupportedEncodingException {
+		String codepage = ht.get(ccsid);
 		if (codepage != null) {
 			return codepage;
 		}

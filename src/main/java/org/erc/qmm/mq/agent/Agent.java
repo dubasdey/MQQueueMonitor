@@ -17,11 +17,7 @@ import com.ibm.mq.MQQueueManager;
  * The Class Agent.
  */
 public class Agent {
-	
-	/** The Constant defaultCharacterSet. */
-	public static final int defaultCharacterSet = 0;
-	
-	
+
 	/** The pmo. */
 	private final MQPutMessageOptions pmo = new MQPutMessageOptions();
 	
@@ -33,9 +29,6 @@ public class Agent {
 	
 	/** The Constant expiryTime. */
 	private static final int expiryTime = 300;
-	
-	/** The Constant waitInterval. */
-	private static final int waitInterval = 30000;
 	
 	/** The Constant encoding. */
 	private static final int encoding = 273;
@@ -67,7 +60,7 @@ public class Agent {
 	public Agent(String host, int port, String channel,String manager) throws MQException {
 		pmo.options = 128;
 		gmo.options = 24577;
-		gmo.waitInterval = waitInterval;
+		gmo.waitInterval = 30000;
 		qmanager = MQUtils.buildManager(host,port,channel,manager);
 		open();
 	}
@@ -110,7 +103,7 @@ public class Agent {
 			
 			message.messageId = null;
 			message.encoding = encoding;
-			message.characterSet = defaultCharacterSet;
+			message.characterSet = 0;
 			replyQueue.get(message, gmo);
 
 			ParameterMessage cfh = new ParameterMessage(message);
@@ -165,27 +158,20 @@ public class Agent {
 	 * @throws MQException the MQ exception
 	 * @throws IOException Signals that an I/O exception has occurred.
 	 */
-	public synchronized List<MQMessage> send(int command, Parameter[] parameters) throws MQException, IOException { 
-			
+	public synchronized List<MQMessage> send(int command, Parameter[] parameters) throws MQException, IOException { 	
 		if (adminQueue == null) {
 			throw new MQException(2, 6124, this);
 		}
-
 		MQMessage message = setRequestMQMD(new MQMessage());
-
 		int count = parameters == null ? 0 : parameters.length;
-		AgentResponseTracker tracker;
 		
+		AgentResponseTracker tracker;
 		if (qmanager_platform == 1) {
 			tracker = new AgentResponseTracker(AgentResponseTracker.TYPE_390);
 			ParameterMessage.write(message, command, count, 16, 3);
 		} else {
 			tracker = new AgentResponseTracker(AgentResponseTracker.TYPE_DEFAULT);
-			int version = 1;
-			for (int i = 0; (i < count) && (version < 3); i++){
-				version = Math.max(version, parameters[i].getHeaderVersion());
-			}
-			ParameterMessage.write(message, command, count, 1, version);
+			ParameterMessage.write(message, command, count, 1, 1);
 		}
 
 		for (int i = 0; i < count; i++) {
@@ -200,11 +186,10 @@ public class Agent {
 			message = new MQMessage();
 			message.correlationId = correlationId;
 			message.encoding = encoding;
-			message.characterSet = defaultCharacterSet;
+			message.characterSet = 0;
 			replyQueue.get(message, gmo);
 			responseMessages.add(message);
-		}while (!tracker.isLast(message));
-		
+		}while (!tracker.isLast(message));		
 		return responseMessages; 
 	}
 
@@ -225,7 +210,7 @@ public class Agent {
 		message.feedback = 0;
 		message.format = "MQADMIN ";
 		message.encoding = encoding;
-		message.characterSet = defaultCharacterSet;
+		message.characterSet = 0;
 		message.replyToQueueName = replyQueue.name;
 		message.replyToQueueManagerName = "";
 		message.persistence = 0;
