@@ -41,8 +41,6 @@ import java.awt.Component;
 
 /**
  * Configuration window.
- *
- * @author xIS15817
  */
 public class ConfigWindow extends JDialog {
 
